@@ -24,10 +24,12 @@ namespace EJames.Controllers
 
         private Dictionary<Player, PlayerFieldView> _playerPresenters = new Dictionary<Player, PlayerFieldView>();
 
+
         public PlayerFieldView GetPlayerPresenter(Player player)
         {
             return _playerPresenters[player];
         }
+
 
         public void AddPlayerPresenter(Player player)
         {
@@ -39,10 +41,12 @@ namespace EJames.Controllers
             presenter.Init(player);
         }
 
+
         protected void Awake()
         {
             _playersController.PlayerAdded += AddPlayerPresenter;
         }
+
 
         protected void OnDestroy()
         {

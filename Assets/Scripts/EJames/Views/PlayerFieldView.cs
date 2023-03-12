@@ -16,9 +16,18 @@ namespace EJames.Views
         [SerializeField]
         private List<Material> _colorMaterials;
 
+
         protected override void InitInternal()
         {
             base.InitInternal();
+
+            Model.ColorChanged += OnColorChanged;
+            OnColorChanged();
+        }
+
+
+        private void OnColorChanged()
+        {
             _meshRenderer.sharedMaterial = _colorMaterials[Model.Color];
         }
     }
