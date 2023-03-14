@@ -28,14 +28,22 @@ namespace EJames.Controllers
             },
         };
 
+        public List<AuctionSlot> AuctionSlots => _auctionSlots;
+
         public bool CanPlayerSeat(Player player, AuctionSlot slot)
         {
             return slot.Players.Count < slot.MaxPlayer;
         }
 
-        public void SeatOn(Player player, AuctionSlot slot)
+        public bool TrySeatOn(Player player, AuctionSlot slot)
         {
-            slot.Players.Push(player);
+            bool canPlayerSeat = CanPlayerSeat(player, slot);
+            if (canPlayerSeat)
+            {
+                slot.AddPlayer(player);
+            }
+
+            return canPlayerSeat;
         }
     }
 }

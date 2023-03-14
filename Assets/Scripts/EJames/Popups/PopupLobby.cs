@@ -60,7 +60,7 @@ namespace EJames.Popups
 
         public void OnStart()
         {
-            _gameStateController.SetState(GameState.Gameplay);
+            _gameStateController.SetState(GameState.Auction);
         }
     }
 }

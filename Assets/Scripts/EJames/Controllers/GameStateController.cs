@@ -32,6 +32,7 @@ namespace EJames.Controllers
         void IInitable.Init()
         {
             _gameStatesMap.Add(GameState.Lobby, _instantiator.Instantiate<GameStateLobby>());
+            _gameStatesMap.Add(GameState.Auction, _instantiator.Instantiate<GameStateAuction>());
             _gameStatesMap.Add(GameState.Gameplay, _instantiator.Instantiate<GameStateGameplay>());
 
             SetState(GameState.Lobby);

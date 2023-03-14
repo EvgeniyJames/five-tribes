@@ -4,6 +4,7 @@
     {
         None,
         Lobby,
+        Auction,
         Gameplay
     }
 }

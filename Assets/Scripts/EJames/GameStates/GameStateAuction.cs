@@ -1,10 +1,6 @@
-﻿#region
-
-#endregion
-
-namespace EJames.GameStates
+﻿namespace EJames.GameStates
 {
-    public class GameStateGameplay : IGameState
+    public class GameStateAuction : IGameState
     {
         void IGameState.OnEnter()
         {

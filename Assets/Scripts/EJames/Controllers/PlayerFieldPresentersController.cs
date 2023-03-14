@@ -22,14 +22,15 @@ namespace EJames.Controllers
         [Inject]
         private PlayersController _playersController;
 
-        private Dictionary<Player, PlayerFieldView> _playerPresenters = new Dictionary<Player, PlayerFieldView>();
+        [Inject]
+        private PlayerOrderController _playerOrderController;
 
+        private Dictionary<Player, PlayerFieldView> _playerPresenters = new Dictionary<Player, PlayerFieldView>();
 
         public PlayerFieldView GetPlayerPresenter(Player player)
         {
             return _playerPresenters[player];
         }
-
 
         public void AddPlayerPresenter(Player player)
         {
@@ -39,14 +40,14 @@ namespace EJames.Controllers
             _playerPresenters.Add(player, presenter);
 
             presenter.Init(player);
-        }
 
+            _playerOrderController.SetPlayerOrder(player, _playerPresenters.Count - 1);
+        }
 
         protected void Awake()
         {
             _playersController.PlayerAdded += AddPlayerPresenter;
         }
-
 
         protected void OnDestroy()
         {
