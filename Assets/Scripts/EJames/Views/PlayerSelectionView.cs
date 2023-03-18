@@ -45,9 +45,13 @@ namespace EJames.Views
 
         private void OnColorChanged()
         {
-            Color playerColor = _colorsController.GetColorByIndex(_currentColorIndex);
-            _colorView.color = playerColor;
+            SetColor(_colorsController.GetColorByIndex(_currentColorIndex));
             Model.Color = _currentColorIndex;
+        }
+
+        private void SetColor(System.Drawing.Color playerColor)
+        {
+            _colorView.color = new Color(playerColor.R, playerColor.G, playerColor.B, playerColor.A);
         }
 
         protected override void InitInternal()
@@ -57,8 +61,7 @@ namespace EJames.Views
             _currentColorIndex = Model.Color;
             _id.text = Model.Id.ToString();
 
-            Color playerColor = _colorsController.GetColorByIndex(_currentColorIndex);
-            _colorView.color = playerColor;
+            SetColor(_colorsController.GetColorByIndex(_currentColorIndex));
         }
     }
 }

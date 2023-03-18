@@ -25,6 +25,9 @@ namespace EJames.Installers
             typeof(ColorsController),
             typeof(PlayersAuctionController),
             typeof(PlayerOrderController),
+            typeof(GridController),
+
+            //Must be last
             typeof(GameStateController),
         };
 

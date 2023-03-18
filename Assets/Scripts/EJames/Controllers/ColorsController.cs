@@ -1,8 +1,8 @@
 ﻿#region
 
 using System.Collections.Generic;
+using System.Drawing;
 using EJames.Models;
-using UnityEngine;
 using Zenject;
 
 #endregion
@@ -16,11 +16,11 @@ namespace EJames.Controllers
 
         private List<Color> _colors = new List<Color>
         {
-            Color.red,
-            Color.green,
-            Color.blue,
-            Color.yellow,
-            Color.magenta,
+            Color.Red,
+            Color.Green,
+            Color.Blue,
+            Color.Yellow,
+            Color.Magenta,
         };
 
         public int ColorsCount => _colors.Count;
@@ -33,17 +33,6 @@ namespace EJames.Controllers
         public int GetColorIndex(Color color)
         {
             return _colors.FindIndex(c => c.Equals(color));
-        }
-
-        public Color GetFreeColor()
-        {
-            List<Color> potentialColor = new List<Color>(_colors);
-            foreach (Player player in _playersController.Players)
-            {
-                potentialColor.Remove(GetColorByIndex(player.Color));
-            }
-
-            return potentialColor[0];
         }
 
         public int GetNextFreeColorIndex(int currentColor)
