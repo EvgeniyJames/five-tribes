@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using EJames.Controllers;
+using EJames.Presenters;
 using EJames.Utility;
 using UnityEngine;
 using Zenject;
@@ -14,12 +15,13 @@ namespace EJames.Installers
     public class GameplayInstaller : MonoInstaller
     {
         [SerializeField]
-        private PlayerFieldPresentersController _playerFieldPresentersController;
+        private PlayerFieldPresenters _playerFieldPresenters;
 
         private List<Type> _initablesTypes = new List<Type>
         {
             typeof(PopupsController),
             typeof(PlayersController),
+            typeof(PlayerSequenceController),
             typeof(ColorsController),
             typeof(PlayersAuctionController),
             typeof(PlayerOrderController),
@@ -42,7 +44,7 @@ namespace EJames.Installers
                 }
             }
 
-            Container.Bind<PlayerFieldPresentersController>().FromInstance(_playerFieldPresentersController).AsSingle();
+            Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();
         }
     }
 }

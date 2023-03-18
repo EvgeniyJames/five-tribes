@@ -1,6 +1,5 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
 using EJames.Controllers;
 using EJames.GameStates;
@@ -37,13 +36,15 @@ namespace EJames.Popups
         private Dictionary<Player, PlayerSelectionView> _playerSelectionViews =
             new Dictionary<Player, PlayerSelectionView>();
 
+        private int _userCount;
+
         public void OnAddPlayer()
         {
             if (_playersController.CanAddPlayer)
             {
                 Player newPlayer = new Player
                 {
-                    Id = DateTime.Now.Ticks,
+                    Id = _userCount++,
                     Color = _colorsController.GetNextFreeColorIndex(-1)
                 };
                 _playersController.AddPlayer(newPlayer);

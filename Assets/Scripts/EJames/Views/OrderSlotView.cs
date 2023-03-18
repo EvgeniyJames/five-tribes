@@ -1,8 +1,7 @@
 ﻿#region
 
-using EJames.Controllers;
 using EJames.Models;
-using UnityEngine;
+using EJames.Presenters;
 using Zenject;
 
 #endregion
@@ -12,7 +11,7 @@ namespace EJames.Views
     public class OrderSlotView : BaseView<OrderSlot>
     {
         [Inject]
-        private PlayerFieldPresentersController _playerFieldPresentersController;
+        private PlayerFieldPresenters _playerFieldPresenters;
 
         protected override void InitInternal()
         {
@@ -26,11 +25,8 @@ namespace EJames.Views
         {
             if (player != null)
             {
-                PlayerFieldView playerFieldView = _playerFieldPresentersController.GetPlayerPresenter(player);
-
-                Transform presenterTransform = playerFieldView.transform;
-                presenterTransform.SetParent(transform);
-                presenterTransform.localPosition = Vector3.zero;
+                PlayerFieldView playerFieldView = _playerFieldPresenters.GetPlayerPresenter(player);
+                playerFieldView.SetParent(transform);
             }
         }
     }

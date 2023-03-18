@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using EJames.GameStates;
 using EJames.Utility;
+using UnityEngine;
 using Zenject;
 
 #endregion
@@ -27,6 +28,8 @@ namespace EJames.Controllers
             _currentState?.OnExit();
             _gameStatesMap.TryGetValue(State, out _currentState);
             _currentState?.OnEnter();
+
+            Debug.Log($"{_currentState.GetType().Name} OnEnter");
         }
 
         void IInitable.Init()

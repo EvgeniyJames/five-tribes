@@ -1,6 +1,7 @@
 ﻿#region
 
 using System.Collections.Generic;
+using EJames.Controllers;
 using EJames.Models;
 using EJames.Utility;
 using EJames.Views;
@@ -9,9 +10,9 @@ using Zenject;
 
 #endregion
 
-namespace EJames.Controllers
+namespace EJames.Presenters
 {
-    public class PlayerFieldPresentersController : MonoBehaviour
+    public class PlayerFieldPresenters : MonoBehaviour
     {
         [SerializeField]
         private PlayerFieldView _playerFieldViewPrefab;
@@ -32,7 +33,7 @@ namespace EJames.Controllers
             return _playerPresenters[player];
         }
 
-        public void AddPlayerPresenter(Player player)
+        public void CreatePlayerPresenter(Player player)
         {
             PlayerFieldView presenter =
                 _instantiator.InstantiatePrefab<PlayerFieldView>(_playerFieldViewPrefab, transform);
@@ -46,12 +47,12 @@ namespace EJames.Controllers
 
         protected void Awake()
         {
-            _playersController.PlayerAdded += AddPlayerPresenter;
+            _playersController.PlayerAdded += CreatePlayerPresenter;
         }
 
         protected void OnDestroy()
         {
-            _playersController.PlayerAdded -= AddPlayerPresenter;
+            _playersController.PlayerAdded -= CreatePlayerPresenter;
         }
     }
 }

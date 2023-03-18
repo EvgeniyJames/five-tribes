@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba88cf45c30492c83dd190b196470b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerFieldPresentersController: {fileID: 1793199298}
+  _playerFieldPresenters: {fileID: 1793199298}
 --- !u!1 &356700943
 GameObject:
   m_ObjectHideFlags: 0
@@ -2504,7 +2504,7 @@ GameObject:
   - component: {fileID: 1793199297}
   - component: {fileID: 1793199298}
   m_Layer: 0
-  m_Name: PlayerFieldPresentersController
+  m_Name: PlayerFieldPresenters
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

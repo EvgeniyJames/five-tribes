@@ -16,6 +16,12 @@ namespace EJames.Views
         [SerializeField]
         private List<Material> _colorMaterials;
 
+        public void SetParent(Transform parent)
+        {
+            Transform presenterTransform = transform;
+            presenterTransform.SetParent(parent);
+            presenterTransform.localPosition = Vector3.zero;
+        }
 
         protected override void InitInternal()
         {
@@ -24,7 +30,6 @@ namespace EJames.Views
             Model.ColorChanged += OnColorChanged;
             OnColorChanged();
         }
-
 
         private void OnColorChanged()
         {

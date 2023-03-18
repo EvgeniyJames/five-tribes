@@ -20,7 +20,7 @@ namespace EJames.GameStates
 
         void IGameState.OnExit()
         {
-            _popupsController.HidePopup<PopupLobby>();
+            // _popupsController.HidePopup<PopupLobby>();
         }
     }
 }

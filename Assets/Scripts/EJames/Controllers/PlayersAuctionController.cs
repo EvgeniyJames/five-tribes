@@ -1,7 +1,9 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using EJames.Models;
+using UnityEngine;
 
 #endregion
 
@@ -28,19 +30,19 @@ namespace EJames.Controllers
             },
         };
 
-        public List<AuctionSlot> AuctionSlots => _auctionSlots;
+        public event Action PlayerSeat;
 
-        public bool CanPlayerSeat(Player player, AuctionSlot slot)
-        {
-            return slot.Players.Count < slot.MaxPlayer;
-        }
+        public List<AuctionSlot> AuctionSlots => _auctionSlots;
 
         public bool TrySeatOn(Player player, AuctionSlot slot)
         {
-            bool canPlayerSeat = CanPlayerSeat(player, slot);
+            bool canPlayerSeat = slot.CanSeat;
             if (canPlayerSeat)
             {
+                Debug.Log($"{player.Id} seat on {slot.Price}");
+
                 slot.AddPlayer(player);
+                PlayerSeat?.Invoke();
             }
 
             return canPlayerSeat;
