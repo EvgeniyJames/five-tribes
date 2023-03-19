@@ -1510,6 +1510,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cellView: {fileID: 5546988166309240236, guid: cf2454f8550b883478bee6b688c21237, type: 3}
   _parent: {fileID: 1066563415}
+  _meepleView: {fileID: 6652652742326332920, guid: da3daebb4a1629747b3dffd9874ce1a5, type: 3}
 --- !u!1 &1148556007
 GameObject:
   m_ObjectHideFlags: 0

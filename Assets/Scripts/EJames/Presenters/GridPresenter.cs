@@ -20,6 +20,9 @@ namespace EJames.Presenters
         [SerializeField]
         private Transform _parent;
 
+        [SerializeField]
+        private MeepleView _meepleView;
+
         [Inject]
         private GridController _gridController;
 
@@ -36,6 +39,13 @@ namespace EJames.Presenters
                 _cellViews.Add(cellView);
 
                 cellView.Init(cell);
+
+                foreach (Meeple meeple in cell.Meeples)
+                {
+                    MeepleView meepleView = _instantiator.InstantiatePrefab<MeepleView>(_meepleView, _parent);
+                    meepleView.Init(meeple);
+                    cellView.SetMeeple(meepleView);
+                }
             }
         }
     }

@@ -21,6 +21,25 @@ namespace EJames.Views
         [SerializeField]
         private TMP_Text _value;
 
+        [Header("Meeples")]
+        [SerializeField]
+        private List<Transform> _meepleTransforms;
+
+        private List<MeepleView> _meepleViews = new List<MeepleView>(3);
+
+        public void SetMeeple(MeepleView meepleView)
+        {
+            _meepleViews.Add(meepleView);
+
+            int parentIndex = _meepleTransforms.FindIndex(t => t.childCount == 0);
+            if (parentIndex > -1)
+            {
+                Transform viewTransform = meepleView.transform;
+                viewTransform.SetParent(_meepleTransforms[parentIndex]);
+                viewTransform.localPosition = Vector3.zero;
+            }
+        }
+
         protected override void InitInternal()
         {
             base.InitInternal();

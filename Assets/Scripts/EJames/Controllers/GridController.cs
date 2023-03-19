@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using EJames.Models;
 using EJames.Utility;
 using Zenject;
@@ -15,59 +16,17 @@ namespace EJames.Controllers
         [Inject]
         private ColorsController _colorsController;
 
-        private List<InitData> _initData = new List<InitData>
-        {
-            new InitData
-            {
-                Color = System.Drawing.Color.Red,
-                Value = 8,
-                TileAction = Tile.TileAction.Oasis,
-                Amount = 6
-            },
-            new InitData
-            {
-                Color = System.Drawing.Color.Red,
-                Value = 6,
-                TileAction = Tile.TileAction.SmallMarket,
-                Amount = 8
-            },
-            new InitData
-            {
-                Color = System.Drawing.Color.Red,
-                Value = 4,
-                TileAction = Tile.TileAction.LargeMarket,
-                Amount = 4
-            },
-            new InitData
-            {
-                Color = System.Drawing.Color.Blue,
-                Value = 6,
-                TileAction = Tile.TileAction.SacredPlaces,
-                Amount = 4
-            },
-            new InitData
-            {
-                Color = System.Drawing.Color.Blue,
-                Value = 5,
-                TileAction = Tile.TileAction.Village,
-                Amount = 5
-            },
-            new InitData
-            {
-                Color = System.Drawing.Color.Blue,
-                Value = 5,
-                TileAction = Tile.TileAction.Village,
-                Amount = 5
-            },
-        };
-
         private List<Tile> _tiles = new List<Tile>(_cellsAmount);
         private List<Cell> _cells = new List<Cell>(_cellsAmount);
+        private List<Meeple> _meeples = new List<Meeple>(_meeplesAmount);
 
         private const int _cellsAmount = _fieldX * _fieldY;
 
         private const int _fieldX = 6;
         private const int _fieldY = 5;
+
+        private const int _initialMeeplesAmount = 3;
+        private const int _meeplesAmount = 90;
 
         private const int _tilesBlueAmount = 12;
         private const int _tilesRedAmount = 18;
@@ -78,7 +37,36 @@ namespace EJames.Controllers
 
         void IInitable.Init()
         {
-            foreach (InitData initData in _initData)
+            InitTiles();
+            InitCells();
+            InitMeeples();
+        }
+
+        private void InitMeeples()
+        {
+            foreach (MeeplesInitData meeplesInitData in _meeplesInitData)
+            {
+                for (int i = 0; i < meeplesInitData.Amount; i++)
+                {
+                    _meeples.Add(new Meeple { Type = meeplesInitData.Type });
+                }
+            }
+
+            _meeples.Shuffle();
+
+            foreach (Cell cell in _cells)
+            {
+                for (int i = 0; i < _initialMeeplesAmount; i++)
+                {
+                    cell.Meeples.Add(_meeples[0]);
+                    _meeples.RemoveAt(0);
+                }
+            }
+        }
+
+        private void InitTiles()
+        {
+            foreach (TilesInitData initData in _tilesInitData)
             {
                 for (int i = 0; i < initData.Amount; i++)
                 {
@@ -86,11 +74,7 @@ namespace EJames.Controllers
                 }
             }
 
-            AddTile(System.Drawing.Color.Blue, 15, Tile.TileAction.SacredPlaces);
-            AddTile(System.Drawing.Color.Blue, 10, Tile.TileAction.SacredPlaces);
-            AddTile(System.Drawing.Color.Blue, 12, Tile.TileAction.SacredPlaces);
-
-            InitCells();
+            _tiles.Shuffle();
         }
 
         private void InitCells()
@@ -112,7 +96,7 @@ namespace EJames.Controllers
             GridInitialized?.Invoke();
         }
 
-        private void AddTile(System.Drawing.Color color, int value, Tile.TileAction action)
+        private void AddTile(Color color, int value, Tile.TileAction action)
         {
             _tiles.Add(
                     new Tile
@@ -124,15 +108,63 @@ namespace EJames.Controllers
                 );
         }
 
-        private class InitData
+        private class TilesInitData
         {
-            public int Amount { get; set; }
+            public TilesInitData(int amount, Color color, int value, Tile.TileAction tileAction)
+            {
+                Amount = amount;
+                Color = color;
+                Value = value;
+                TileAction = tileAction;
+            }
 
-            public System.Drawing.Color Color { get; set; }
+            public int Amount { get; }
 
-            public int Value { get; set; }
+            public Color Color { get; }
 
-            public Tile.TileAction TileAction { get; set; }
+            public int Value { get; }
+
+            public Tile.TileAction TileAction { get; }
         }
+
+        private class MeeplesInitData
+        {
+            public MeeplesInitData(int amount, Meeple.MeepleType type)
+            {
+                Amount = amount;
+                Type = type;
+            }
+
+            public int Amount { get; }
+
+            public Meeple.MeepleType Type { get; }
+        }
+
+        #region InitData
+
+        private List<TilesInitData> _tilesInitData = new List<TilesInitData>
+        {
+            new TilesInitData(color: Color.Red, value: 8, tileAction: Tile.TileAction.Oasis, amount: 6),
+            new TilesInitData(color: Color.Red, value: 6, tileAction: Tile.TileAction.SmallMarket, amount: 8),
+            new TilesInitData(color: Color.Red, value: 4, tileAction: Tile.TileAction.LargeMarket, amount: 4),
+            new TilesInitData(color: Color.Blue, value: 6, tileAction: Tile.TileAction.SacredPlaces, amount: 4),
+            new TilesInitData(color: Color.Blue, value: 5, tileAction: Tile.TileAction.Village, amount: 5),
+            new TilesInitData(color: Color.Blue, value: 15, tileAction: Tile.TileAction.SacredPlaces, amount: 1),
+            new TilesInitData(color: Color.Blue, value: 5, tileAction: Tile.TileAction.Village, amount: 5),
+            new TilesInitData(color: Color.Blue, value: 15, tileAction: Tile.TileAction.SacredPlaces, amount: 1),
+            new TilesInitData(color: Color.Blue, value: 12, tileAction: Tile.TileAction.SacredPlaces, amount: 1),
+            new TilesInitData(color: Color.Blue, value: 10, tileAction: Tile.TileAction.SacredPlaces, amount: 1),
+        };
+
+        private List<MeeplesInitData> _meeplesInitData = new List<MeeplesInitData>
+        {
+            new MeeplesInitData(16, Meeple.MeepleType.Viziers),
+            new MeeplesInitData(20, Meeple.MeepleType.Elders),
+            new MeeplesInitData(18, Meeple.MeepleType.Assassins),
+            new MeeplesInitData(18, Meeple.MeepleType.Builders),
+            new MeeplesInitData(18, Meeple.MeepleType.Merchants),
+        };
+
+        #endregion
     }
 }
