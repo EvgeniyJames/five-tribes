@@ -8,7 +8,7 @@ namespace EJames.Views
 {
     public class BaseView<T> : MonoBehaviour
     {
-        protected T Model { get; private set; }
+        public T Model { get; private set; }
 
         public void Init(T model)
         {

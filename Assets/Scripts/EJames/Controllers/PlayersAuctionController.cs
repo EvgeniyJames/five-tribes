@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using EJames.Models;
-using UnityEngine;
 
 #endregion
 
@@ -39,8 +38,6 @@ namespace EJames.Controllers
             bool canPlayerSeat = slot.CanSeat;
             if (canPlayerSeat)
             {
-                Debug.Log($"{player.Id} seat on {slot.Price}");
-
                 slot.AddPlayer(player);
                 PlayerSeat?.Invoke();
             }

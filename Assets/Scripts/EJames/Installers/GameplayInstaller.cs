@@ -17,6 +17,9 @@ namespace EJames.Installers
         [SerializeField]
         private PlayerFieldPresenters _playerFieldPresenters;
 
+        [SerializeField]
+        private GridPresenter _gridPresenter;
+
         private List<Type> _initablesTypes = new List<Type>
         {
             typeof(PopupsController),
@@ -26,6 +29,10 @@ namespace EJames.Installers
             typeof(PlayersAuctionController),
             typeof(PlayerOrderController),
             typeof(GridController),
+            typeof(CellSelectController),
+            typeof(PossibleMovementController),
+            typeof(PlayerHandController),
+            typeof(PlayerMovementController),
 
             //Must be last
             typeof(GameStateController),
@@ -48,6 +55,7 @@ namespace EJames.Installers
             }
 
             Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();
+            Container.Bind<GridPresenter>().FromInstance(_gridPresenter).AsSingle();
         }
     }
 }

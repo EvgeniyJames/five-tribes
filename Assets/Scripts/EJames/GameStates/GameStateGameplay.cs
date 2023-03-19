@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using EJames.Controllers;
 using EJames.Models;
+using EJames.Popups;
 using UnityEngine;
 using Zenject;
 
@@ -19,23 +20,30 @@ namespace EJames.GameStates
         private PlayerSequenceController _playerSequenceController;
 
         [Inject]
-        private PlayerOrderController _playerOrderController;
+        private PopupsController _popupsController;
+
+        [Inject]
+        private PlayerMovementController _playerMovementController;
 
         void IGameState.OnEnter()
         {
+            _popupsController.HidePopup<PopupLobby>();
+            _popupsController.ShowPopup<GameplayHud>();
+
             List<Player> players = new List<Player>();
             for (int i = _playersAuctionController.AuctionSlots.Count - 1; i >= 0; i--)
             {
                 AuctionSlot auctionSlot = _playersAuctionController.AuctionSlots[i];
                 foreach (Player player in auctionSlot.Players)
                 {
-                    Debug.Log(player.Id);
                     players.Add(player);
                 }
             }
 
             _playerSequenceController.PlayersEnded += OnPlayersSequenceEnd;
             _playerSequenceController.Start(players);
+
+            _playerMovementController.Start();
         }
 
         void IGameState.OnExit()

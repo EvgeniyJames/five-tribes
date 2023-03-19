@@ -35,6 +35,22 @@ namespace EJames.Controllers
 
         public List<Cell> Cells => _cells;
 
+        public int FieldX => _fieldX - 1;
+
+        public int FieldY => _fieldY - 1;
+
+        public Cell GetCell(int x, int y)
+        {
+            Cell cell = null;
+            int cellIndex = Cells.FindIndex(c => c.X.Equals(x) && c.Y.Equals(y));
+            if (cellIndex > -1)
+            {
+                cell = Cells[cellIndex];
+            }
+
+            return cell;
+        }
+
         void IInitable.Init()
         {
             InitTiles();
@@ -58,7 +74,7 @@ namespace EJames.Controllers
             {
                 for (int i = 0; i < _initialMeeplesAmount; i++)
                 {
-                    cell.Meeples.Add(_meeples[0]);
+                    cell.AddMeeple(_meeples[0]);
                     _meeples.RemoveAt(0);
                 }
             }

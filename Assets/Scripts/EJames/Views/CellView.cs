@@ -2,9 +2,12 @@
 
 using System;
 using System.Collections.Generic;
+using EJames.Controllers;
 using EJames.Models;
+using EJames.Presenters;
 using TMPro;
 using UnityEngine;
+using Zenject;
 
 #endregion
 
@@ -27,6 +30,12 @@ namespace EJames.Views
 
         private List<MeepleView> _meepleViews = new List<MeepleView>(3);
 
+        [Inject]
+        private CellSelectController _cellSelectController;
+
+        [Inject]
+        private GridPresenter _gridPresenter;
+
         public void SetMeeple(MeepleView meepleView)
         {
             _meepleViews.Add(meepleView);
@@ -40,6 +49,11 @@ namespace EJames.Views
             }
         }
 
+        public void OnCellClicked()
+        {
+            _cellSelectController.CellClicked(Model);
+        }
+
         protected override void InitInternal()
         {
             base.InitInternal();
@@ -48,7 +62,22 @@ namespace EJames.Views
             thisTransform.name = $"{nameof(CellView)}_{Model.X}_{Model.Y}";
             thisTransform.localPosition = new Vector3(Model.X, 0, Model.Y);
 
+            Model.MeepleAdded += OnMeepleAdded;
+            Model.MeepleRemoved += OnMeepleRemoved;
+
             SetupCell();
+        }
+
+        private void OnMeepleRemoved(Meeple meeple)
+        {
+            MeepleView meepleView = _gridPresenter.GetMeepleView(meeple);
+            _meepleViews.Remove(meepleView);
+        }
+
+        private void OnMeepleAdded(Meeple meeple)
+        {
+            MeepleView meepleView = _gridPresenter.GetMeepleView(meeple);
+            SetMeeple(meepleView);
         }
 
         private void SetupCell()
@@ -66,6 +95,8 @@ namespace EJames.Views
 
             _value.text = tile.Value.ToString();
         }
+
+        #region InnerClasses
 
         [Serializable]
         private class ColorItem
@@ -94,5 +125,7 @@ namespace EJames.Views
 
             public GameObject GO => _go;
         }
+
+        #endregion
     }
 }

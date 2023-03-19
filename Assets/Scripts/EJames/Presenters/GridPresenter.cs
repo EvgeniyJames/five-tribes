@@ -30,6 +30,19 @@ namespace EJames.Presenters
         private Instantiator _instantiator;
 
         private List<CellView> _cellViews = new List<CellView>();
+        private List<MeepleView> _meepleViews = new List<MeepleView>();
+
+        public MeepleView GetMeepleView(Meeple meeple)
+        {
+            MeepleView meepleView = null;
+            int viewIndex = _meepleViews.FindIndex(mv => mv.Model.Equals(meeple));
+            if (viewIndex > -1)
+            {
+                meepleView = _meepleViews[viewIndex];
+            }
+
+            return meepleView;
+        }
 
         protected void Awake()
         {
@@ -43,6 +56,8 @@ namespace EJames.Presenters
                 foreach (Meeple meeple in cell.Meeples)
                 {
                     MeepleView meepleView = _instantiator.InstantiatePrefab<MeepleView>(_meepleView, _parent);
+                    _meepleViews.Add(meepleView);
+
                     meepleView.Init(meeple);
                     cellView.SetMeeple(meepleView);
                 }

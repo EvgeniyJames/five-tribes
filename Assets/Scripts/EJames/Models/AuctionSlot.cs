@@ -15,7 +15,7 @@ namespace EJames.Models
 
         public int MaxPlayer { get; set; }
 
-        public Stack<Player> Players { get; set; } = new Stack<Player>();
+        public Stack<Player> Players { get; } = new Stack<Player>();
 
         public bool CanSeat => Players.Count < MaxPlayer;
 
