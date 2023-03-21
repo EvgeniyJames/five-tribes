@@ -51,6 +51,14 @@ namespace EJames.Controllers
             return cell;
         }
 
+        public bool InField(int x, int y)
+        {
+            return x >= 0 &&
+                x < _fieldX &&
+                y >= 0 &&
+                y < _fieldY;
+        }
+
         void IInitable.Init()
         {
             InitTiles();

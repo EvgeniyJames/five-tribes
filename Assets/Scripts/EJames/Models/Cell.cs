@@ -47,5 +47,44 @@ namespace EJames.Models
             Meeples.Remove(meeple);
             MeepleRemoved?.Invoke(meeple);
         }
+
+        public bool HasAnyMeeples()
+        {
+            return Meeples.Count > 0;
+        }
+
+        public bool HasMeeple(Meeple meeple)
+        {
+            return Meeples.FindIndex(m => m.Type.Equals(meeple.Type)) > -1;
+        }
+
+        public bool HasAnyMeeples(List<Meeple> meeples)
+        {
+            bool hasMeeples = false;
+            foreach (Meeple meeple in meeples)
+            {
+                hasMeeples |= HasMeeple(meeple);
+            }
+
+            return hasMeeples;
+        }
+
+        public List<Meeple> GetUnionMeeples(List<Meeple> meeples)
+        {
+            List<Meeple> meeplesToCheck = HasAnyMeeples() ? Meeples : meeples;
+            List<Meeple> meeplesUnion = new List<Meeple>();
+
+            foreach (Meeple meeple in meeplesToCheck)
+            {
+                int meepleIndex = meeples.FindIndex(m => m.Type == meeple.Type);
+                if (meepleIndex > -1 &&
+                    meeplesUnion.FindIndex(m => m.Type == meeple.Type) == -1)
+                {
+                    meeplesUnion.Add(meeples[meepleIndex]);
+                }
+            }
+
+            return meeplesUnion;
+        }
     }
 }

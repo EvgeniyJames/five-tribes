@@ -1,7 +1,9 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using EJames.Models;
+using EJames.Popups;
 using UnityEngine;
 using Zenject;
 
@@ -17,10 +19,15 @@ namespace EJames.Controllers
         [Inject]
         private PlayerHandController _playerHandController;
 
+        [Inject]
+        private PopupsController _popupsController;
+
         private State _state;
 
         private Cell _startCell;
         private List<Cell> _movementCells = new List<Cell>();
+
+        private Cell _waitingCell;
 
         public void Start()
         {
@@ -32,8 +39,17 @@ namespace EJames.Controllers
             _cellSelectController.Clicked -= SelectCell;
         }
 
+        public void PlayerLeftMeeple(Meeple meeple)
+        {
+            if (_state == State.WaitPlayerDecision)
+            {
+            }
+        }
+
         private void SelectCell(Cell cell)
         {
+            Debug.Log($"SelectCell: {Enum.GetName(typeof(State), _state)}");
+
             switch (_state)
             {
                 case State.StartCell:
@@ -50,48 +66,55 @@ namespace EJames.Controllers
 
         private void ProcessStart(Cell cell)
         {
-            _playerHandController.SetMeeples(cell.Meeples);
+            if (cell.HasAnyMeeples())
+            {
+                _playerHandController.SetMeeples(cell.Meeples);
 
-            _startCell = cell;
-            _state = State.Moving;
+                _startCell = cell;
+                _state = State.Moving;
+            }
+            else
+            {
+                Debug.Log($"{cell.X}, {cell.Y} has no Meeples");
+            }
         }
 
         private void ProcessMoving(Cell cell)
         {
             bool isMovementPossible;
+            bool hasAnyMeeples = cell.HasAnyMeeples() || cell.HasAnyMeeples(_playerHandController.Meeples);
             if (_movementCells.Count > 0)
             {
                 int lastIndex = _movementCells.Count - 1;
                 Cell lastMovementCell = _movementCells[lastIndex];
-                isMovementPossible = lastMovementCell.IsNeighbour(cell);
+                isMovementPossible = lastMovementCell.IsNeighbour(cell) &&
+                    hasAnyMeeples;
             }
             else
             {
-                isMovementPossible = _startCell.IsNeighbour(cell);
+                isMovementPossible = !_startCell.Equals(cell) && hasAnyMeeples;
             }
 
             if (isMovementPossible)
             {
-                foreach (Meeple cellMeeple in cell.Meeples)
+                List<Meeple> unionMeeples = cell.GetUnionMeeples(_playerHandController.Meeples);
+                if (unionMeeples.Count > 1)
                 {
-                    int handMeepleIndex = _playerHandController.Meeples.FindIndex(m => m.Type.Equals(cellMeeple.Type));
-                    if (handMeepleIndex > -1)
-                    {
-                        _movementCells.Add(cell);
-                        Meeple meeple = _playerHandController.Meeples[handMeepleIndex];
+                    _state = State.WaitPlayerDecision;
+                    _waitingCell = cell;
 
-                        _startCell.RemoveMeeple(meeple);
-                        cell.AddMeeple(meeple);
-
-                        _playerHandController.Meeples.RemoveAt(handMeepleIndex);
-
-                        if (_playerHandController.Meeples.Count == 0)
+                    _popupsController.ShowPopup<PopupMeepleDecision>(
+                        new Dictionary<string, object>
                         {
-                            _state = State.Finish;
-                        }
+                            { PopupMeepleDecision.Meeples, unionMeeples },
+                        });
 
-                        break;
-                    }
+                    PopupMeepleDecision popupMeepleDecision = _popupsController.GetPopup<PopupMeepleDecision>();
+                    popupMeepleDecision.ChooseCallback += OnMeepleChoose;
+                }
+                else
+                {
+                    Movement(cell, unionMeeples[0]);
                 }
             }
             else
@@ -104,10 +127,38 @@ namespace EJames.Controllers
         {
         }
 
+        private void Movement(Cell cell, Meeple meeple)
+        {
+            _movementCells.Add(cell);
+            _startCell.RemoveMeeple(meeple);
+            cell.AddMeeple(meeple);
+
+            _playerHandController.Meeples.Remove(meeple);
+            bool isMoveDone = _playerHandController.Meeples.Count == 0;
+            if (isMoveDone)
+            {
+                _movementCells.Clear();
+                _startCell = null;
+            }
+
+            _state = isMoveDone ? State.StartCell : State.Moving;
+        }
+
+        private void OnMeepleChoose(Meeple meeple)
+        {
+            Movement(_waitingCell, meeple);
+
+            PopupMeepleDecision popupMeepleDecision = _popupsController.GetPopup<PopupMeepleDecision>();
+            popupMeepleDecision.ChooseCallback -= OnMeepleChoose;
+
+            _popupsController.HidePopup<PopupMeepleDecision>();
+        }
+
         private enum State
         {
             StartCell,
             Moving,
+            WaitPlayerDecision,
             Finish
         }
     }

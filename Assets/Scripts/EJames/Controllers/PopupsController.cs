@@ -17,12 +17,12 @@ namespace EJames.Controllers
             _popups.Add(popup);
         }
 
-        public void ShowPopup<T>() where T : IPopup
+        public void ShowPopup<T>(Dictionary<string, object> args = null) where T : IPopup
         {
             int popupIndex = _popups.FindIndex(p => p.GetType() == typeof(T));
             if (popupIndex > -1)
             {
-                _popups[popupIndex].Show();
+                _popups[popupIndex].Show(args);
             }
         }
 
@@ -33,6 +33,18 @@ namespace EJames.Controllers
             {
                 _popups[popupIndex].Hide();
             }
+        }
+
+        public T GetPopup<T>() where T : class, IPopup
+        {
+            IPopup popup = null;
+            int popupIndex = _popups.FindIndex(p => p.GetType() == typeof(T));
+            if (popupIndex > -1)
+            {
+                popup = _popups[popupIndex];
+            }
+
+            return popup as T;
         }
 
         void IInitable.Init()

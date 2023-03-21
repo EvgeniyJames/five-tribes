@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Collections.Generic;
 using EJames.Controllers;
 using UnityEngine;
 using Zenject;
@@ -13,14 +14,17 @@ namespace EJames.Popups
         [Inject]
         private PopupsController _popupsController;
 
-        void IPopup.Show()
+        protected Dictionary<string, object> Args { get; private set; }
+
+        void IPopup.Show(Dictionary<string, object> args)
         {
-            gameObject.SetActive(true);
+            Args = args;
+            ShowInternal();
         }
 
         void IPopup.Hide()
         {
-            gameObject.SetActive(false);
+            HideInternal();
         }
 
         protected void Awake()
@@ -31,6 +35,16 @@ namespace EJames.Popups
         protected virtual void AwakeInternal()
         {
             _popupsController.RegisterPopup(this);
+        }
+
+        protected virtual void ShowInternal()
+        {
+            gameObject.SetActive(true);
+        }
+
+        protected virtual void HideInternal()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

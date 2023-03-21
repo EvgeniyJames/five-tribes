@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using EJames.Models;
 using UnityEngine;
@@ -8,10 +9,17 @@ using UnityEngine;
 
 namespace EJames.Views
 {
-    public class MeepleView : BaseView<Meeple>
+    public class MeepleChooseView : BaseView<Meeple>
     {
         [SerializeField]
         private List<MeepleViewData> _meepleViewData;
+
+        public event Action<Meeple> Selected;
+
+        public void OnSelect()
+        {
+            Selected?.Invoke(Model);
+        }
 
         protected override void InitInternal()
         {

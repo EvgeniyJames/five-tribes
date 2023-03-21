@@ -26,5 +26,10 @@ namespace EJames.Utility
             GameObject instantiatePrefab = _diContainer.InstantiatePrefab(prefab, parent);
             return instantiatePrefab.GetComponent(typeof(T)) as T;
         }
+
+        public void DestroyGameObject(GameObject gameObject)
+        {
+            Object.Destroy(gameObject);
+        }
     }
 }

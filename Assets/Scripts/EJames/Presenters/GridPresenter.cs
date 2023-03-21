@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using EJames.Controllers;
+using EJames.Helpers;
 using EJames.Models;
 using EJames.Utility;
 using EJames.Views;
@@ -56,12 +57,23 @@ namespace EJames.Presenters
                 foreach (Meeple meeple in cell.Meeples)
                 {
                     MeepleView meepleView = _instantiator.InstantiatePrefab<MeepleView>(_meepleView, _parent);
+                    meepleView.name = $"MeepleView_{_meepleViews.Count}";
+
                     _meepleViews.Add(meepleView);
 
                     meepleView.Init(meeple);
                     cellView.SetMeeple(meepleView);
                 }
             }
+
+            Cell startCell = _gridController.GetCell(0, 0);
+            ChainHelper chainHelper = new ChainHelper(
+                _gridController,
+                startCell,
+                _gridController.GetCell(1, 0),
+                startCell.Meeples.Count);
+
+            chainHelper.CalculateMovements();
         }
     }
 }
