@@ -8,16 +8,16 @@ namespace EJames.Models
 {
     public class Movement
     {
-        public Movement(Cell cell = null, Meeple meepleLeft = null)
+        public Movement(Cell startCell, Cell firstCell)
         {
-            Cell = cell;
-            MeepleLeft = meepleLeft;
+            StartCell = startCell;
+            FirstCell = firstCell;
         }
 
-        public Cell Cell { get; }
+        public Cell StartCell { get; }
 
-        public Meeple MeepleLeft { get; }
+        public Cell FirstCell { get; }
 
-        public List<Movement> Movements { get; } = new List<Movement>();
+        public List<Path> Path { get; } = new List<Path>();
     }
 }

@@ -36,6 +36,31 @@ namespace EJames.Models
             return isNeighbour;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
+            if (obj.GetType() != GetType())
+            {
+                return false;
+            }
+
+            return Equals((Cell)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Tile, X, Y);
+        }
+
         public void AddMeeple(Meeple meeple)
         {
             Meeples.Add(meeple);
@@ -85,6 +110,11 @@ namespace EJames.Models
             }
 
             return meeplesUnion;
+        }
+
+        protected bool Equals(Cell other)
+        {
+            return Equals(Tile, other.Tile) && X == other.X && Y == other.Y;
         }
     }
 }

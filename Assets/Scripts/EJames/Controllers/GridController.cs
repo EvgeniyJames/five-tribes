@@ -72,7 +72,7 @@ namespace EJames.Controllers
             {
                 for (int i = 0; i < meeplesInitData.Amount; i++)
                 {
-                    _meeples.Add(new Meeple { Type = meeplesInitData.Type });
+                    _meeples.Add(new Meeple(meeplesInitData.Type));
                 }
             }
 

@@ -1,5 +1,6 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
 using EJames.Controllers;
 using EJames.Helpers;
@@ -32,6 +33,8 @@ namespace EJames.Presenters
 
         private List<CellView> _cellViews = new List<CellView>();
         private List<MeepleView> _meepleViews = new List<MeepleView>();
+
+        private List<Movement> _possibleMovements = new List<Movement>();
 
         public MeepleView GetMeepleView(Meeple meeple)
         {
@@ -66,14 +69,35 @@ namespace EJames.Presenters
                 }
             }
 
-            Cell startCell = _gridController.GetCell(0, 0);
-            ChainHelper chainHelper = new ChainHelper(
-                _gridController,
-                startCell,
-                _gridController.GetCell(1, 0),
-                startCell.Meeples.Count);
+            TestChains();
+        }
 
-            chainHelper.CalculateMovements();
+        private void TestChains()
+        {
+            DateTime startTime = DateTime.Now;
+
+            foreach (Cell startCell in _gridController.Cells)
+            {
+                foreach (Cell firstCell in _gridController.Cells)
+                {
+                    if (!startCell.Equals(firstCell))
+                    {
+                        ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
+                        chainHelper.CalculateMovements();
+
+                        if (chainHelper.Paths.Count > 0)
+                        {
+                            Movement movement = new Movement(startCell, firstCell);
+                            movement.Path.AddRange(chainHelper.Paths);
+
+                            _possibleMovements.Add(movement);
+                        }
+                    }
+                }
+            }
+
+            Debug.Log(DateTime.Now - startTime);
+            Debug.Log($"Find {_possibleMovements.Count} possible movements");
         }
     }
 }
