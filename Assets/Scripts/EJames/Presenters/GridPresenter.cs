@@ -35,6 +35,7 @@ namespace EJames.Presenters
         private List<MeepleView> _meepleViews = new List<MeepleView>();
 
         private List<Movement> _possibleMovements = new List<Movement>();
+        private HashSet<Cell> _possibleStartCells = new HashSet<Cell>();
 
         public MeepleView GetMeepleView(Meeple meeple)
         {
@@ -78,26 +79,25 @@ namespace EJames.Presenters
 
             foreach (Cell startCell in _gridController.Cells)
             {
-                foreach (Cell firstCell in _gridController.Cells)
+                foreach (Cell firstCell in _gridController.GetNeighbours(startCell))
                 {
-                    if (!startCell.Equals(firstCell))
+                    ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
+                    chainHelper.CalculateMovements();
+
+                    if (chainHelper.Paths.Count > 0)
                     {
-                        ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
-                        chainHelper.CalculateMovements();
+                        Movement movement = new Movement(startCell, firstCell);
+                        movement.Path.AddRange(chainHelper.Paths);
 
-                        if (chainHelper.Paths.Count > 0)
-                        {
-                            Movement movement = new Movement(startCell, firstCell);
-                            movement.Path.AddRange(chainHelper.Paths);
-
-                            _possibleMovements.Add(movement);
-                        }
+                        _possibleMovements.Add(movement);
+                        _possibleStartCells.Add(startCell);
                     }
                 }
             }
 
             Debug.Log(DateTime.Now - startTime);
             Debug.Log($"Find {_possibleMovements.Count} possible movements");
+            Debug.Log($"Find {_possibleStartCells.Count} possible start cells");
         }
     }
 }

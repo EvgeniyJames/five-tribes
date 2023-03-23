@@ -59,6 +59,21 @@ namespace EJames.Controllers
                 y < _fieldY;
         }
 
+        public List<Cell> GetNeighbours(Cell cell)
+        {
+            List<Cell> neighbours = new List<Cell>
+            {
+                GetCell(cell.X - 1, cell.Y),
+                GetCell(cell.X + 1, cell.Y),
+                GetCell(cell.X, cell.Y + 1),
+                GetCell(cell.X, cell.Y - 1)
+            };
+
+            neighbours.RemoveAll(c => c == null);
+
+            return neighbours;
+        }
+
         void IInitable.Init()
         {
             InitTiles();
