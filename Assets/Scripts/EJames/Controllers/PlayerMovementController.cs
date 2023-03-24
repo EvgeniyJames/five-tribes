@@ -1,7 +1,7 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
+using System.Text;
 using EJames.Models;
 using EJames.Popups;
 using UnityEngine;
@@ -29,6 +29,8 @@ namespace EJames.Controllers
 
         private Cell _startCell;
         private List<Cell> _movementCells = new List<Cell>();
+
+        private List<Movement> _possibleMovements;
 
         private Cell _waitingCell;
 
@@ -60,8 +62,29 @@ namespace EJames.Controllers
 
         private void ProcessStart(Cell cell)
         {
-            if (cell.HasAnyMeeples())
+            List<Movement> possibleMovementsByStartCell =
+                _possibleMovementController.GetPossibleMovementsByStartCell(cell);
+            if (possibleMovementsByStartCell.Count > 0)
             {
+                _possibleMovements = possibleMovementsByStartCell;
+
+                StringBuilder sb = new StringBuilder();
+                foreach (Movement possibleMovement in _possibleMovements)
+                {
+                    sb.Append($"{possibleMovement.StartCell}");
+
+                    foreach (Path path in possibleMovement.Path)
+                    {
+                        foreach (PathNode pathNode in path.PathNodes)
+                        {
+                            sb.Append($" -> {pathNode.Cell} ({pathNode.MeepleLeft.Type.ToString()})");
+                        }
+
+                        Debug.Log(sb);
+                        sb.Clear();
+                    }
+                }
+
                 _playerHandController.SetMeeples(cell.Meeples);
 
                 _startCell = cell;
@@ -69,7 +92,7 @@ namespace EJames.Controllers
             }
             else
             {
-                Debug.Log($"{cell.X}, {cell.Y} has no Meeples");
+                Debug.Log($"{cell.X}, {cell.Y} can't be start cell");
             }
         }
 

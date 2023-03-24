@@ -112,6 +112,11 @@ namespace EJames.Models
             return meeplesUnion;
         }
 
+        public override string ToString()
+        {
+            return $"Cell ({X}, {Y})";
+        }
+
         protected bool Equals(Cell other)
         {
             return Equals(Tile, other.Tile) && X == other.X && Y == other.Y;

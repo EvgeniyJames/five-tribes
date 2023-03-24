@@ -39,17 +39,21 @@ namespace EJames.Helpers
             ProcessCell(_firstCell, startCellMeeples);
 
             _startCell.Meeples.AddRange(startCellMeeples);
+
+            PrintPaths();
         }
 
         public void PrintPaths()
         {
+            StringBuilder pathString = new StringBuilder();
             foreach (Path path in _paths)
             {
-                StringBuilder pathString = new StringBuilder();
+                pathString.Clear();
+                pathString.Append($"{_startCell}");
+
                 foreach (PathNode movement in path.PathNodes)
                 {
-                    pathString.Append(
-                        $"{movement.MeepleLeft.Type.ToString()} on ({movement.Cell.X}:{movement.Cell.Y}); ");
+                    pathString.Append($" -> {movement.Cell} ({movement.MeepleLeft.Type.ToString()})");
                 }
 
                 Debug.Log($"Path: {pathString}");
@@ -67,7 +71,8 @@ namespace EJames.Helpers
                     for (int i = _pathNodesStack.Count - 1, j = 0; i >= 0 && j < 2; i--, j++)
                     {
                         PathNode movement = _pathNodesStack[i];
-                        if (movement.Cell.X == neighbour.X && movement.Cell.Y == neighbour.Y)
+                        if (movement.Cell.Equals(_startCell) ||
+                            (movement.Cell.X == neighbour.X && movement.Cell.Y == neighbour.Y))
                         {
                             alreadyChecked = true;
                             break;

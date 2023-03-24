@@ -9,7 +9,7 @@ namespace EJames.Utility
 {
     public static class ListExtensions
     {
-        private static Random _random = new Random();
+        private static Random _random = new Random(0);
 
         public static void Shuffle<T>(this IList<T> list)
         {

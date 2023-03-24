@@ -23,6 +23,21 @@ namespace EJames.Controllers
 
         public List<Movement> PossibleMovements => _possibleMovements;
 
+        public List<Movement> GetPossibleMovementsByStartCell(Cell startCell)
+        {
+            List<Movement> movements = new List<Movement>();
+
+            foreach (Movement possibleMovement in _possibleMovements)
+            {
+                if (possibleMovement.StartCell.Equals(startCell))
+                {
+                    movements.Add(possibleMovement);
+                }
+            }
+
+            return movements;
+        }
+
         void IInitable.Init()
         {
             FindAllPossibleMovements();
