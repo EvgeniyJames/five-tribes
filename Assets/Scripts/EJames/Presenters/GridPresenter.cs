@@ -1,9 +1,7 @@
 ﻿#region
 
-using System;
 using System.Collections.Generic;
 using EJames.Controllers;
-using EJames.Helpers;
 using EJames.Models;
 using EJames.Utility;
 using EJames.Views;
@@ -34,9 +32,6 @@ namespace EJames.Presenters
         private List<CellView> _cellViews = new List<CellView>();
         private List<MeepleView> _meepleViews = new List<MeepleView>();
 
-        private List<Movement> _possibleMovements = new List<Movement>();
-        private HashSet<Cell> _possibleStartCells = new HashSet<Cell>();
-
         public MeepleView GetMeepleView(Meeple meeple)
         {
             MeepleView meepleView = null;
@@ -46,6 +41,7 @@ namespace EJames.Presenters
                 meepleView = _meepleViews[viewIndex];
             }
 
+            Debug.Log($"GetMeepleView: {meepleView.name}");
             return meepleView;
         }
 
@@ -69,35 +65,23 @@ namespace EJames.Presenters
                     cellView.SetMeeple(meepleView);
                 }
             }
-
-            TestChains();
         }
 
-        private void TestChains()
+        protected void OnDestroy()
         {
-            DateTime startTime = DateTime.Now;
-
-            foreach (Cell startCell in _gridController.Cells)
+            foreach (MeepleView meepleView in _meepleViews)
             {
-                foreach (Cell firstCell in _gridController.GetNeighbours(startCell))
-                {
-                    ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
-                    chainHelper.CalculateMovements();
-
-                    if (chainHelper.Paths.Count > 0)
-                    {
-                        Movement movement = new Movement(startCell, firstCell);
-                        movement.Path.AddRange(chainHelper.Paths);
-
-                        _possibleMovements.Add(movement);
-                        _possibleStartCells.Add(startCell);
-                    }
-                }
+                _instantiator.Destroy(meepleView);
             }
 
-            Debug.Log(DateTime.Now - startTime);
-            Debug.Log($"Find {_possibleMovements.Count} possible movements");
-            Debug.Log($"Find {_possibleStartCells.Count} possible start cells");
+            _meepleViews.Clear();
+
+            foreach (CellView cellView in _cellViews)
+            {
+                _instantiator.Destroy(cellView);
+            }
+
+            _cellViews.Clear();
         }
     }
 }

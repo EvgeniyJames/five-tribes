@@ -45,7 +45,12 @@ namespace EJames.Models
 
         protected bool Equals(PathNode other)
         {
-            return Equals(Cell, other.Cell) && Equals(MeepleLeft, other.MeepleLeft);
+            return Equals(Cell, other.Cell) && MeeplesTypesEquals(other.MeepleLeft);
+        }
+
+        private bool MeeplesTypesEquals(Meeple other)
+        {
+            return MeepleLeft.Type.Equals(other.Type);
         }
     }
 }

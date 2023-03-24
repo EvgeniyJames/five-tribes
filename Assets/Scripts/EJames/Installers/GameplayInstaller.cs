@@ -38,6 +38,8 @@ namespace EJames.Installers
             typeof(GameStateController),
         };
 
+        private List<IInitable> _initables = new List<IInitable>();
+
         public override void InstallBindings()
         {
             Instantiator instantiator = new Instantiator(Container);
@@ -50,8 +52,13 @@ namespace EJames.Installers
 
                 if (initableObject is IInitable initable)
                 {
-                    initable.Init();
+                    _initables.Add(initable);
                 }
+            }
+
+            foreach (IInitable initable in _initables)
+            {
+                initable.Init();
             }
 
             Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();

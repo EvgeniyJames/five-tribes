@@ -22,6 +22,9 @@ namespace EJames.Controllers
         [Inject]
         private PopupsController _popupsController;
 
+        [Inject]
+        private PossibleMovementController _possibleMovementController;
+
         private State _state;
 
         private Cell _startCell;
@@ -39,17 +42,8 @@ namespace EJames.Controllers
             _cellSelectController.Clicked -= SelectCell;
         }
 
-        public void PlayerLeftMeeple(Meeple meeple)
-        {
-            if (_state == State.WaitPlayerDecision)
-            {
-            }
-        }
-
         private void SelectCell(Cell cell)
         {
-            Debug.Log($"SelectCell: {Enum.GetName(typeof(State), _state)}");
-
             switch (_state)
             {
                 case State.StartCell:

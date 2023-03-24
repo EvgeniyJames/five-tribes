@@ -31,5 +31,10 @@ namespace EJames.Utility
         {
             Object.Destroy(gameObject);
         }
+
+        public void Destroy<T>(T monoBehavior) where T : MonoBehaviour
+        {
+            DestroyGameObject(monoBehavior.gameObject);
+        }
     }
 }

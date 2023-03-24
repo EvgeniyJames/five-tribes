@@ -51,14 +51,6 @@ namespace EJames.Controllers
             return cell;
         }
 
-        public bool InField(int x, int y)
-        {
-            return x >= 0 &&
-                x < _fieldX &&
-                y >= 0 &&
-                y < _fieldY;
-        }
-
         public List<Cell> GetNeighbours(Cell cell)
         {
             List<Cell> neighbours = new List<Cell>
@@ -79,6 +71,8 @@ namespace EJames.Controllers
             InitTiles();
             InitCells();
             InitMeeples();
+
+            GridInitialized?.Invoke();
         }
 
         private void InitMeeples()
@@ -131,8 +125,6 @@ namespace EJames.Controllers
                         });
                 }
             }
-
-            GridInitialized?.Invoke();
         }
 
         private void AddTile(Color color, int value, Tile.TileAction action)

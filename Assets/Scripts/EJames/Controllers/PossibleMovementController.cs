@@ -1,67 +1,56 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
+using EJames.Helpers;
 using EJames.Models;
+using EJames.Utility;
 using Zenject;
 
 #endregion
 
 namespace EJames.Controllers
 {
-    public class PossibleMovementController
+    public class PossibleMovementController : IInitable
     {
         [Inject]
         private GridController _gridController;
 
         private List<Movement> _possibleMovements = new List<Movement>();
+        private HashSet<Cell> _possibleStartCells = new HashSet<Cell>();
 
-        public void FindCombinations()
+        public TimeSpan LastOperationTime { get; private set; }
+
+        public List<Movement> PossibleMovements => _possibleMovements;
+
+        void IInitable.Init()
         {
+            FindAllPossibleMovements();
         }
 
-        private void ProcessCellMovement(Cell startCell, Cell firstCell)
+        private void FindAllPossibleMovements()
         {
-            if (firstCell.HasAnyMeeples(startCell.Meeples))
-            {
-            }
+            DateTime startTime = DateTime.Now;
 
-            List<Cell> cells = _gridController.Cells;
-            foreach (Cell cell in cells)
+            foreach (Cell startCell in _gridController.Cells)
             {
-                List<Meeple> meeples = cell.Meeples;
-                bool canBeStartCell = !cell.Equals(startCell) && cell.HasAnyMeeples(meeples);
-                if (canBeStartCell)
+                foreach (Cell firstCell in _gridController.GetNeighbours(startCell))
                 {
-                }
-            }
+                    ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
+                    chainHelper.CalculateMovements();
 
-            List<Meeple> cellMeeples = startCell.Meeples;
-            int movesCount = cellMeeples.Count;
-
-            int x = startCell.X;
-            int y = startCell.Y;
-            for (int moveIndex = 0; moveIndex < movesCount; moveIndex++)
-            {
-                x++;
-
-                if (x > 0 && x < _gridController.FieldX)
-                {
-                    Cell nextCell = _gridController.GetCell(x, y);
-                    for (int i = 0; i < nextCell.Meeples.Count; i++)
+                    if (chainHelper.Paths.Count > 0)
                     {
-                        Meeple meeple = nextCell.Meeples[i];
-                        if (cellMeeples.FindIndex(m => m.Type == meeple.Type) > -1)
-                        {
-                            AddPossibleMovement(startCell, nextCell, meeple);
-                        }
+                        Movement movement = new Movement(startCell, firstCell);
+                        movement.Path.AddRange(chainHelper.Paths);
+
+                        _possibleMovements.Add(movement);
+                        _possibleStartCells.Add(startCell);
                     }
                 }
             }
-        }
 
-        private void AddPossibleMovement(Cell from, Cell to, Meeple meeple)
-        {
-            // _possibleMovements.FindIndex(pm => pm.CellFrom)
+            LastOperationTime = DateTime.Now - startTime;
         }
     }
 }

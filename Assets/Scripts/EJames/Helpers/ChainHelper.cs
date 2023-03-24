@@ -14,17 +14,13 @@ namespace EJames.Helpers
     public class ChainHelper
     {
         private GridController _gridController;
-
         private Cell _startCell;
         private Cell _firstCell;
 
         private List<FieldMovement> _fieldMovements = new List<FieldMovement>();
-
-        private HashSet<Cell> _finishedCells = new HashSet<Cell>();
+        private List<PathNode> _pathNodesStack = new List<PathNode>();
 
         private List<Path> _paths = new List<Path>();
-
-        private List<PathNode> _pathNodesStack = new List<PathNode>();
 
         public ChainHelper(GridController gridController, Cell startCell, Cell firstCell)
         {
