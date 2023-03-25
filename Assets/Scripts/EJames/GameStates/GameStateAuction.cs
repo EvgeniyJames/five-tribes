@@ -23,8 +23,13 @@ namespace EJames.GameStates
         [Inject]
         private PlayerOrderController _playerOrderController;
 
+        [Inject]
+        private GameTestController _gameTestController;
+
         void IGameState.OnEnter()
         {
+            _gameTestController.StartGame();
+
             _playersAuctionController.PlayerSeat += OnPlayerSeat;
             _playerSequenceController.PlayersEnded += OnPlayersSequenceEnd;
 

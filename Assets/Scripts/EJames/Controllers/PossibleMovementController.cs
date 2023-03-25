@@ -38,34 +38,41 @@ namespace EJames.Controllers
             return movements;
         }
 
-        void IInitable.Init()
-        {
-            FindAllPossibleMovements();
-        }
-
-        private void FindAllPossibleMovements()
+        public void FindAllPossibleMovements()
         {
             DateTime startTime = DateTime.Now;
 
+            _possibleMovements.Clear();
+            _possibleStartCells.Clear();
+
             foreach (Cell startCell in _gridController.Cells)
             {
-                foreach (Cell firstCell in _gridController.GetNeighbours(startCell))
+                if (startCell.HasAnyMeeples())
                 {
-                    ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
-                    chainHelper.CalculateMovements();
-
-                    if (chainHelper.Paths.Count > 0)
+                    List<Cell> neighbours = _gridController.GetNeighbours(startCell);
+                    foreach (Cell firstCell in neighbours)
                     {
-                        Movement movement = new Movement(startCell, firstCell);
-                        movement.Path.AddRange(chainHelper.Paths);
+                        ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
+                        chainHelper.CalculateMovements();
 
-                        _possibleMovements.Add(movement);
-                        _possibleStartCells.Add(startCell);
+                        if (chainHelper.Paths.Count > 0)
+                        {
+                            Movement movement = new Movement(startCell, firstCell);
+                            movement.Path.AddRange(chainHelper.Paths);
+
+                            _possibleMovements.Add(movement);
+                            _possibleStartCells.Add(startCell);
+                        }
                     }
                 }
             }
 
             LastOperationTime = DateTime.Now - startTime;
+        }
+
+        void IInitable.Init()
+        {
+            FindAllPossibleMovements();
         }
     }
 }

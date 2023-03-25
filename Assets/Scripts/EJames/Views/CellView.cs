@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using EJames.Controllers;
+using EJames.Helpers;
 using EJames.Models;
 using EJames.Presenters;
 using TMPro;
@@ -28,6 +29,10 @@ namespace EJames.Views
         [SerializeField]
         private List<Transform> _meepleTransforms;
 
+        [Header("Highlighter")]
+        [SerializeField]
+        private ColorHighlighter _colorHighlighter;
+
         private List<MeepleView> _meepleViews = new List<MeepleView>(3);
 
         [Inject]
@@ -35,6 +40,8 @@ namespace EJames.Views
 
         [Inject]
         private GridPresenter _gridPresenter;
+
+        public ColorHighlighter ColorHighlighter => _colorHighlighter;
 
         public void SetMeeple(MeepleView meepleView)
         {

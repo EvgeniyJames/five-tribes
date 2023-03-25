@@ -41,8 +41,19 @@ namespace EJames.Presenters
                 meepleView = _meepleViews[viewIndex];
             }
 
-            Debug.Log($"GetMeepleView: {meepleView.name}");
             return meepleView;
+        }
+
+        public CellView GetCellView(Cell cell)
+        {
+            CellView cellView = null;
+            int viewIndex = _cellViews.FindIndex(cv => cv.Model.Equals(cell));
+            if (viewIndex > -1)
+            {
+                cellView = _cellViews[viewIndex];
+            }
+
+            return cellView;
         }
 
         protected void Awake()

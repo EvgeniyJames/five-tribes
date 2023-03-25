@@ -28,9 +28,9 @@ namespace EJames.Controllers
         private State _state;
 
         private Cell _startCell;
-        private List<Cell> _movementCells = new List<Cell>();
 
         private List<Movement> _possibleMovements;
+        private Path _currentPath = new Path();
 
         private Cell _waitingCell;
 
@@ -44,7 +44,7 @@ namespace EJames.Controllers
             _cellSelectController.Clicked -= SelectCell;
         }
 
-        private void SelectCell(Cell cell)
+        public void SelectCell(Cell cell)
         {
             switch (_state)
             {
@@ -60,6 +60,28 @@ namespace EJames.Controllers
             }
         }
 
+        public void Movement(Cell cell, Meeple meeple)
+        {
+            _currentPath.PathNodes.Add(new PathNode(cell, meeple));
+
+            _startCell.RemoveMeeple(meeple);
+            cell.AddMeeple(meeple);
+
+            _playerHandController.Meeples.Remove(meeple);
+            bool isMoveDone = _playerHandController.Meeples.Count == 0;
+            if (isMoveDone)
+            {
+                _startCell = null;
+                _currentPath.PathNodes.Clear();
+
+                _possibleMovementController.FindAllPossibleMovements();
+                Debug.Log(_possibleMovementController.PossibleMovements.Count);
+            }
+
+            State state = isMoveDone ? State.StartCell : State.Moving;
+            SetState(state);
+        }
+
         private void ProcessStart(Cell cell)
         {
             List<Movement> possibleMovementsByStartCell =
@@ -67,28 +89,10 @@ namespace EJames.Controllers
             if (possibleMovementsByStartCell.Count > 0)
             {
                 _possibleMovements = possibleMovementsByStartCell;
-
-                StringBuilder sb = new StringBuilder();
-                foreach (Movement possibleMovement in _possibleMovements)
-                {
-                    sb.Append($"{possibleMovement.StartCell}");
-
-                    foreach (Path path in possibleMovement.Path)
-                    {
-                        foreach (PathNode pathNode in path.PathNodes)
-                        {
-                            sb.Append($" -> {pathNode.Cell} ({pathNode.MeepleLeft.Type.ToString()})");
-                        }
-
-                        Debug.Log(sb);
-                        sb.Clear();
-                    }
-                }
-
                 _playerHandController.SetMeeples(cell.Meeples);
 
                 _startCell = cell;
-                _state = State.Moving;
+                SetState(State.Moving);
             }
             else
             {
@@ -96,28 +100,64 @@ namespace EJames.Controllers
             }
         }
 
+        private void PrintPossibleMovements()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (Movement possibleMovement in _possibleMovements)
+            {
+                sb.Append($"{possibleMovement.StartCell}");
+
+                foreach (Path path in possibleMovement.Path)
+                {
+                    foreach (PathNode pathNode in path.PathNodes)
+                    {
+                        sb.Append($" -> {pathNode.Cell} ({pathNode.MeepleLeft.Type.ToString()})");
+                    }
+
+                    Debug.Log(sb);
+                    sb.Clear();
+                }
+            }
+        }
+
+        private void SetState(State state)
+        {
+            _state = state;
+            Debug.Log($"State: {_state.ToString()}");
+        }
+
         private void ProcessMoving(Cell cell)
         {
-            bool isMovementPossible;
-            bool hasAnyMeeples = cell.HasAnyMeeples() || cell.HasAnyMeeples(_playerHandController.Meeples);
-            if (_movementCells.Count > 0)
+            List<Meeple> canLeaveMeeplesHere = new List<Meeple>();
+            if (_currentPath.PathNodes.Count == 0)
             {
-                int lastIndex = _movementCells.Count - 1;
-                Cell lastMovementCell = _movementCells[lastIndex];
-                isMovementPossible = lastMovementCell.IsNeighbour(cell) &&
-                    hasAnyMeeples;
-            }
-            else
-            {
-                isMovementPossible = !_startCell.Equals(cell) && hasAnyMeeples;
+                _possibleMovements = _possibleMovements.FindAll(m => m.FirstCell.Equals(cell));
             }
 
-            if (isMovementPossible)
+            foreach (Movement possibleMovement in _possibleMovements)
             {
-                List<Meeple> unionMeeples = cell.GetUnionMeeples(_playerHandController.Meeples);
+                foreach (Path path in possibleMovement.Path)
+                {
+                    if (path.PathNodes.Count > _currentPath.PathNodes.Count)
+                    {
+                        PathNode pathNode = path.PathNodes[_currentPath.PathNodes.Count];
+                        if (pathNode.Cell.Equals(cell) &&
+                            canLeaveMeeplesHere.FindIndex(m => pathNode.MeepleLeft.Type.Equals(m.Type)) == -1)
+                        {
+                            canLeaveMeeplesHere.Add(pathNode.MeepleLeft);
+                        }
+                    }
+                }
+            }
+
+            if (canLeaveMeeplesHere.Count > 0)
+            {
+                List<Meeple> unionMeeples = cell.HasAnyMeeples() ?
+                    cell.GetUnionMeeples(_playerHandController.Meeples) :
+                    _playerHandController.Meeples;
                 if (unionMeeples.Count > 1)
                 {
-                    _state = State.WaitPlayerDecision;
+                    SetState(State.WaitPlayerDecision);
                     _waitingCell = cell;
 
                     _popupsController.ShowPopup<PopupMeepleDecision>(
@@ -142,23 +182,6 @@ namespace EJames.Controllers
 
         private void ProcessFinish(Cell cell)
         {
-        }
-
-        private void Movement(Cell cell, Meeple meeple)
-        {
-            _movementCells.Add(cell);
-            _startCell.RemoveMeeple(meeple);
-            cell.AddMeeple(meeple);
-
-            _playerHandController.Meeples.Remove(meeple);
-            bool isMoveDone = _playerHandController.Meeples.Count == 0;
-            if (isMoveDone)
-            {
-                _movementCells.Clear();
-                _startCell = null;
-            }
-
-            _state = isMoveDone ? State.StartCell : State.Moving;
         }
 
         private void OnMeepleChoose(Meeple meeple)

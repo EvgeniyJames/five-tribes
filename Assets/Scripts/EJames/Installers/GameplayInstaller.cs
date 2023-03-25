@@ -33,6 +33,7 @@ namespace EJames.Installers
             typeof(PossibleMovementController),
             typeof(PlayerHandController),
             typeof(PlayerMovementController),
+            typeof(GameTestController),
 
             //Must be last
             typeof(GameStateController),
@@ -44,6 +45,9 @@ namespace EJames.Installers
         {
             Instantiator instantiator = new Instantiator(Container);
             Container.Bind<Instantiator>().FromInstance(instantiator).AsSingle();
+
+            Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();
+            Container.Bind<GridPresenter>().FromInstance(_gridPresenter).AsSingle();
 
             foreach (Type type in _initablesTypes)
             {
@@ -60,9 +64,6 @@ namespace EJames.Installers
             {
                 initable.Init();
             }
-
-            Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();
-            Container.Bind<GridPresenter>().FromInstance(_gridPresenter).AsSingle();
         }
     }
 }
