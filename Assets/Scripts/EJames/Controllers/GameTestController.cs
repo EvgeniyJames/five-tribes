@@ -51,7 +51,7 @@ namespace EJames.Controllers
                 _playerMovementController.SelectCell(possibleMovement.StartCell);
                 await Task.Delay(300);
 
-                foreach (Path path in possibleMovement.Path)
+                foreach (Path path in possibleMovement.Paths)
                 {
                     foreach (PathNode pathNode in path.PathNodes)
                     {

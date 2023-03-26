@@ -1,10 +1,9 @@
 ﻿#region
 
+using System;
 using System.Collections.Generic;
-using System.Text;
 using EJames.Models;
 using EJames.Popups;
-using UnityEngine;
 using Zenject;
 
 #endregion
@@ -34,6 +33,8 @@ namespace EJames.Controllers
 
         private Cell _waitingCell;
 
+        public event Action<Path> MovementFinished;
+
         public void Start()
         {
             _cellSelectController.Clicked += SelectCell;
@@ -54,9 +55,6 @@ namespace EJames.Controllers
                 case State.Moving:
                     ProcessMoving(cell);
                     break;
-                case State.Finish:
-                    ProcessFinish(cell);
-                    break;
             }
         }
 
@@ -71,11 +69,12 @@ namespace EJames.Controllers
             bool isMoveDone = _playerHandController.Meeples.Count == 0;
             if (isMoveDone)
             {
+                MovementFinished?.Invoke(_currentPath);
+
                 _startCell = null;
                 _currentPath.PathNodes.Clear();
 
                 _possibleMovementController.FindAllPossibleMovements();
-                Debug.Log(_possibleMovementController.PossibleMovements.Count);
             }
 
             State state = isMoveDone ? State.StartCell : State.Moving;
@@ -94,36 +93,11 @@ namespace EJames.Controllers
                 _startCell = cell;
                 SetState(State.Moving);
             }
-            else
-            {
-                Debug.Log($"{cell.X}, {cell.Y} can't be start cell");
-            }
-        }
-
-        private void PrintPossibleMovements()
-        {
-            StringBuilder sb = new StringBuilder();
-            foreach (Movement possibleMovement in _possibleMovements)
-            {
-                sb.Append($"{possibleMovement.StartCell}");
-
-                foreach (Path path in possibleMovement.Path)
-                {
-                    foreach (PathNode pathNode in path.PathNodes)
-                    {
-                        sb.Append($" -> {pathNode.Cell} ({pathNode.MeepleLeft.Type.ToString()})");
-                    }
-
-                    Debug.Log(sb);
-                    sb.Clear();
-                }
-            }
         }
 
         private void SetState(State state)
         {
             _state = state;
-            Debug.Log($"State: {_state.ToString()}");
         }
 
         private void ProcessMoving(Cell cell)
@@ -136,7 +110,7 @@ namespace EJames.Controllers
 
             foreach (Movement possibleMovement in _possibleMovements)
             {
-                foreach (Path path in possibleMovement.Path)
+                foreach (Path path in possibleMovement.Paths)
                 {
                     if (path.PathNodes.Count > _currentPath.PathNodes.Count)
                     {
@@ -174,14 +148,6 @@ namespace EJames.Controllers
                     Movement(cell, unionMeeples[0]);
                 }
             }
-            else
-            {
-                Debug.Log($"Can't go to {cell.X}, {cell.Y}");
-            }
-        }
-
-        private void ProcessFinish(Cell cell)
-        {
         }
 
         private void OnMeepleChoose(Meeple meeple)
@@ -199,7 +165,6 @@ namespace EJames.Controllers
             StartCell,
             Moving,
             WaitPlayerDecision,
-            Finish
         }
     }
 }

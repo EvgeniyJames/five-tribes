@@ -28,7 +28,7 @@ namespace EJames.GameStates
 
         void IGameState.OnEnter()
         {
-            _gameTestController.StartGame();
+            // _gameTestController.StartGame();
 
             _playersAuctionController.PlayerSeat += OnPlayerSeat;
             _playerSequenceController.PlayersEnded += OnPlayersSequenceEnd;

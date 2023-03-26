@@ -17,7 +17,6 @@ namespace EJames.Controllers
         private GridController _gridController;
 
         private List<Movement> _possibleMovements = new List<Movement>();
-        private HashSet<Cell> _possibleStartCells = new HashSet<Cell>();
 
         public TimeSpan LastOperationTime { get; private set; }
 
@@ -43,7 +42,6 @@ namespace EJames.Controllers
             DateTime startTime = DateTime.Now;
 
             _possibleMovements.Clear();
-            _possibleStartCells.Clear();
 
             foreach (Cell startCell in _gridController.Cells)
             {
@@ -58,10 +56,9 @@ namespace EJames.Controllers
                         if (chainHelper.Paths.Count > 0)
                         {
                             Movement movement = new Movement(startCell, firstCell);
-                            movement.Path.AddRange(chainHelper.Paths);
+                            movement.Paths.AddRange(chainHelper.Paths);
 
                             _possibleMovements.Add(movement);
-                            _possibleStartCells.Add(startCell);
                         }
                     }
                 }

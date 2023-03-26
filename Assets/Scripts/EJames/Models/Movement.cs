@@ -18,6 +18,6 @@ namespace EJames.Models
 
         public Cell FirstCell { get; }
 
-        public List<Path> Path { get; } = new List<Path>();
+        public List<Path> Paths { get; } = new List<Path>();
     }
 }

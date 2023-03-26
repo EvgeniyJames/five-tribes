@@ -22,6 +22,7 @@ namespace EJames.Installers
 
         private List<Type> _initablesTypes = new List<Type>
         {
+            typeof(MeepleBagController),
             typeof(PopupsController),
             typeof(PlayersController),
             typeof(PlayerSequenceController),
@@ -34,6 +35,7 @@ namespace EJames.Installers
             typeof(PlayerHandController),
             typeof(PlayerMovementController),
             typeof(GameTestController),
+            typeof(PlayerMovementFinishController),
 
             //Must be last
             typeof(GameStateController),

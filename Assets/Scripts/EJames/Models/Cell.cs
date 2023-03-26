@@ -112,6 +112,21 @@ namespace EJames.Models
             return meeplesUnion;
         }
 
+        public List<Meeple> GetMeeplesOfType(Meeple.MeepleType meepleType)
+        {
+            List<Meeple> meeples = new List<Meeple>();
+
+            foreach (Meeple meeple in Meeples)
+            {
+                if (meeple.Type.Equals(meepleType))
+                {
+                    meeples.Add(meeple);
+                }
+            }
+
+            return meeples;
+        }
+
         public override string ToString()
         {
             return $"Cell ({X}, {Y})";
