@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using EJames.Controllers;
 using EJames.Models;
+using EJames.Presenters;
 using Zenject;
 
 #endregion
@@ -26,8 +27,13 @@ namespace EJames.GameStates
         [Inject]
         private GameTestController _gameTestController;
 
+        [Inject]
+        private PlayerAuctionPresenter _playerAuctionPresenter;
+
         void IGameState.OnEnter()
         {
+            _playerAuctionPresenter.gameObject.SetActive(true);
+
             // _gameTestController.StartGame();
 
             _playersAuctionController.PlayerSeat += OnPlayerSeat;
@@ -47,6 +53,7 @@ namespace EJames.GameStates
 
         void IGameState.OnExit()
         {
+            _playerAuctionPresenter.gameObject.SetActive(false);
         }
 
         private void OnPlayerSeat()

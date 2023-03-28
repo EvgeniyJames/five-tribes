@@ -20,6 +20,9 @@ namespace EJames.Installers
         [SerializeField]
         private GridPresenter _gridPresenter;
 
+        [SerializeField]
+        private PlayerAuctionPresenter _playerAuctionPresenter;
+
         private List<Type> _initablesTypes = new List<Type>
         {
             typeof(MeepleBagController),
@@ -50,6 +53,7 @@ namespace EJames.Installers
 
             Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();
             Container.Bind<GridPresenter>().FromInstance(_gridPresenter).AsSingle();
+            Container.Bind<PlayerAuctionPresenter>().FromInstance(_playerAuctionPresenter).AsSingle();
 
             foreach (Type type in _initablesTypes)
             {

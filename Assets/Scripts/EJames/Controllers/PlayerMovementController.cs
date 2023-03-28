@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using EJames.Models;
 using EJames.Popups;
+using EJames.Presenters;
+using UnityEngine;
 using Zenject;
 
 #endregion
@@ -23,6 +25,9 @@ namespace EJames.Controllers
 
         [Inject]
         private PossibleMovementController _possibleMovementController;
+
+        [Inject]
+        private GridPresenter _gridPresenter;
 
         private State _state;
 
@@ -92,6 +97,12 @@ namespace EJames.Controllers
 
                 _startCell = cell;
                 SetState(State.Moving);
+
+                List<Cell> startCells = _possibleMovementController.GetAllPossibleStartCells();
+                foreach (Cell startCell in startCells)
+                {
+                    _gridPresenter.GetCellView(startCell).ColorHighlighter.Highlight(Color.magenta);
+                }
             }
         }
 

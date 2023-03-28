@@ -37,6 +37,17 @@ namespace EJames.Controllers
             return movements;
         }
 
+        public List<Cell> GetAllPossibleStartCells()
+        {
+            List<Cell> startCells = new List<Cell>();
+            foreach (Movement possibleMovement in PossibleMovements)
+            {
+                startCells.Add(possibleMovement.StartCell);
+            }
+
+            return startCells;
+        }
+
         public void FindAllPossibleMovements()
         {
             DateTime startTime = DateTime.Now;

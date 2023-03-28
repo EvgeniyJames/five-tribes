@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using EJames.Controllers;
 using EJames.Models;
 using EJames.Popups;
+using EJames.Presenters;
 using UnityEngine;
 using Zenject;
 
@@ -25,6 +26,12 @@ namespace EJames.GameStates
         [Inject]
         private PlayerMovementController _playerMovementController;
 
+        [Inject]
+        private GridPresenter _gridPresenter;
+
+        [Inject]
+        private PossibleMovementController _possibleMovementController;
+
         void IGameState.OnEnter()
         {
             _popupsController.HidePopup<PopupLobby>();
@@ -44,6 +51,12 @@ namespace EJames.GameStates
             _playerSequenceController.Start(players);
 
             _playerMovementController.Start();
+
+            List<Cell> startCells = _possibleMovementController.GetAllPossibleStartCells();
+            foreach (Cell startCell in startCells)
+            {
+                _gridPresenter.GetCellView(startCell).ColorHighlighter.Highlight(Color.magenta);
+            }
         }
 
         void IGameState.OnExit()
