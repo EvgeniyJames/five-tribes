@@ -51,25 +51,21 @@ namespace EJames.Controllers
                 _playerMovementController.SelectCell(possibleMovement.StartCell);
                 await Task.Delay(300);
 
-                foreach (Path path in possibleMovement.Paths)
+                Path path = possibleMovement.Path;
+                foreach (PathNode pathNode in path.PathNodes)
                 {
-                    foreach (PathNode pathNode in path.PathNodes)
-                    {
-                        _gridPresenter.GetCellView(pathNode.Cell)
-                            .ColorHighlighter.Highlight(GetMeepleColor(pathNode.MeepleLeft));
-
-                        await Task.Delay(300);
-                    }
+                    _gridPresenter.GetCellView(pathNode.Cell)
+                        .ColorHighlighter.Highlight(GetMeepleColor(pathNode.MeepleLeft));
 
                     await Task.Delay(300);
+                }
 
-                    foreach (PathNode pathNode in path.PathNodes)
-                    {
-                        _playerMovementController.Movement(pathNode.Cell, pathNode.MeepleLeft);
-                        await Task.Delay(300);
-                    }
+                await Task.Delay(300);
 
-                    break;
+                foreach (PathNode pathNode in path.PathNodes)
+                {
+                    _playerMovementController.Movement(pathNode.Cell, pathNode.MeepleLeft);
+                    await Task.Delay(300);
                 }
 
                 await Task.Delay(300);

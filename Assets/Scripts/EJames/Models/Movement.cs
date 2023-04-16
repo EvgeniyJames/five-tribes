@@ -1,7 +1,5 @@
 ﻿#region
 
-using System.Collections.Generic;
-
 #endregion
 
 namespace EJames.Models
@@ -18,6 +16,6 @@ namespace EJames.Models
 
         public Cell FirstCell { get; }
 
-        public List<Path> Paths { get; } = new List<Path>();
+        public Path Path { get; } = new Path();
     }
 }

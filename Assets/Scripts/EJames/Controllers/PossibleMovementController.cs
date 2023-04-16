@@ -63,14 +63,7 @@ namespace EJames.Controllers
                     {
                         ChainHelper chainHelper = new ChainHelper(_gridController, startCell, firstCell);
                         chainHelper.CalculateMovements();
-
-                        if (chainHelper.Paths.Count > 0)
-                        {
-                            Movement movement = new Movement(startCell, firstCell);
-                            movement.Paths.AddRange(chainHelper.Paths);
-
-                            _possibleMovements.Add(movement);
-                        }
+                        _possibleMovements.AddRange(chainHelper.PossibleMovements);
                     }
                 }
             }

@@ -20,8 +20,7 @@ namespace EJames.Helpers
         private List<FieldMovement> _fieldMovements = new List<FieldMovement>();
         private List<PathNode> _pathNodesStack = new List<PathNode>();
 
-        private List<Path> _paths = new List<Path>();
-
+        private List<Movement> _possibleMovements = new List<Movement>();
 
         public ChainHelper(GridController gridController, Cell startCell, Cell firstCell)
         {
@@ -30,9 +29,7 @@ namespace EJames.Helpers
             _firstCell = firstCell;
         }
 
-
-        public List<Path> Paths => _paths;
-
+        public List<Movement> PossibleMovements => _possibleMovements;
 
         public void CalculateMovements()
         {
@@ -44,15 +41,13 @@ namespace EJames.Helpers
             _startCell.Meeples.AddRange(startCellMeeples);
         }
 
-
         public void PrintPaths()
         {
-            foreach (Path path in _paths)
+            foreach (Movement movement in _possibleMovements)
             {
-                PrintPath(path);
+                PrintPath(movement.Path);
             }
         }
-
 
         private void PrintPath(Path path)
         {
@@ -66,7 +61,6 @@ namespace EJames.Helpers
 
             Debug.Log($"Path: {pathString}");
         }
-
 
         private void ProcessCell(Cell rootCell, List<Meeple> meeplesInHand)
         {
@@ -108,7 +102,9 @@ namespace EJames.Helpers
 
                     if (!alreadyChecked)
                     {
-                        List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ? rootCell.GetUnionMeeples(meeplesInHand) : meeplesInHand;
+                        List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ?
+                            rootCell.GetUnionMeeples(meeplesInHand) :
+                            meeplesInHand;
 
                         Log("unionMeeples");
                         foreach (Meeple leftMeeple in unionMeeples.ToList())
@@ -131,34 +127,31 @@ namespace EJames.Helpers
             }
             else
             {
-                AddPath();
+                AddMovement();
             }
         }
-
 
         private void Log(string log)
         {
             // Debug.Log(log);
         }
 
-
-        private void AddPath()
+        private void AddMovement()
         {
-            Path newPath = new Path();
-            foreach (PathNode movement in _pathNodesStack)
+            Movement movement = new Movement(_startCell, _firstCell);
+            foreach (PathNode node in _pathNodesStack)
             {
-                newPath.PathNodes.Add(movement);
+                movement.Path.PathNodes.Add(node);
             }
 
-            if (_paths.TrueForAll(path => !IsExist(path, newPath)))
+            if (_possibleMovements.TrueForAll(m => !IsExist(m.Path, movement.Path)))
             {
                 // Log("ADDED");
                 //PrintPath(newPath);
 
-                _paths.Add(newPath);
+                _possibleMovements.Add(movement);
             }
         }
-
 
         private bool IsExist(Path path, Path other)
         {
