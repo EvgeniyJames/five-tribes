@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using EJames.Models;
 using EJames.Popups;
 using EJames.Presenters;
+using EJames.Views;
 using UnityEngine;
 using Zenject;
 
@@ -40,15 +41,18 @@ namespace EJames.Controllers
 
         public event Action<Path> MovementFinished;
 
+
         public void Start()
         {
             _cellSelectController.Clicked += SelectCell;
         }
 
+
         public void Finish()
         {
             _cellSelectController.Clicked -= SelectCell;
         }
+
 
         public void SelectCell(Cell cell)
         {
@@ -62,6 +66,7 @@ namespace EJames.Controllers
                     break;
             }
         }
+
 
         public void Movement(Cell cell, Meeple meeple)
         {
@@ -86,30 +91,44 @@ namespace EJames.Controllers
             SetState(state);
         }
 
+
         private void ProcessStart(Cell cell)
         {
-            List<Movement> possibleMovementsByStartCell =
+            _possibleMovements =
                 _possibleMovementController.GetPossibleMovementsByStartCell(cell);
-            if (possibleMovementsByStartCell.Count > 0)
+            if (_possibleMovements.Count > 0)
             {
-                _possibleMovements = possibleMovementsByStartCell;
                 _playerHandController.SetMeeples(cell.Meeples);
 
                 _startCell = cell;
                 SetState(State.Moving);
 
-                List<Cell> startCells = _possibleMovementController.GetAllPossibleStartCells();
-                foreach (Cell startCell in startCells)
-                {
-                    _gridPresenter.GetCellView(startCell).ColorHighlighter.Highlight(Color.magenta);
-                }
+                HighlightPossibleCells();
+            }
+            else
+            {
+                Debug.Log($"Can't move from {cell}");
             }
         }
+
+
+        private void HighlightPossibleCells()
+        {
+            _gridPresenter.HighlightOff();
+            foreach (Movement possibleMovement in _possibleMovements)
+            {
+                Cell firstCell = possibleMovement.FirstCell;
+                CellView cellView = _gridPresenter.GetCellView(firstCell);
+                cellView.ColorHighlighter.Highlight(Color.magenta);
+            }
+        }
+
 
         private void SetState(State state)
         {
             _state = state;
         }
+
 
         private void ProcessMoving(Cell cell)
         {
@@ -137,9 +156,7 @@ namespace EJames.Controllers
 
             if (canLeaveMeeplesHere.Count > 0)
             {
-                List<Meeple> unionMeeples = cell.HasAnyMeeples() ?
-                    cell.GetUnionMeeples(_playerHandController.Meeples) :
-                    _playerHandController.Meeples;
+                List<Meeple> unionMeeples = cell.HasAnyMeeples() ? cell.GetUnionMeeples(_playerHandController.Meeples) : _playerHandController.Meeples;
                 if (unionMeeples.Count > 1)
                 {
                     SetState(State.WaitPlayerDecision);
@@ -161,6 +178,7 @@ namespace EJames.Controllers
             }
         }
 
+
         private void OnMeepleChoose(Meeple meeple)
         {
             Movement(_waitingCell, meeple);
@@ -170,6 +188,7 @@ namespace EJames.Controllers
 
             _popupsController.HidePopup<PopupMeepleDecision>();
         }
+
 
         private enum State
         {
