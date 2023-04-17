@@ -51,6 +51,13 @@ namespace EJames.Controllers
             return cell;
         }
 
+        public List<Cell> GetNeighboursWithout(Cell cell, Cell filter)
+        {
+            List<Cell> neighbours = GetNeighbours(cell);
+            neighbours.RemoveAll(c => c.Equals(filter));
+            return neighbours;
+        }
+
         public List<Cell> GetNeighbours(Cell cell)
         {
             List<Cell> neighbours = new List<Cell>

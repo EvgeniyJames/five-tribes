@@ -20,7 +20,6 @@ namespace EJames.Helpers
 
         private List<Movement> _possibleMovements = new List<Movement>();
 
-
         public ChainHelper(GridController gridController, Cell startCell, Cell firstCell)
         {
             _gridController = gridController;
@@ -28,20 +27,17 @@ namespace EJames.Helpers
             _firstCell = firstCell;
         }
 
-
         public List<Movement> PossibleMovements => _possibleMovements;
-
 
         public void CalculateMovements()
         {
             List<Meeple> startCellMeeples = _startCell.Meeples.ToArray().ToList();
             _startCell.Meeples.Clear();
 
-            ProcessCell(_firstCell, startCellMeeples);
+            ProcessCell(_firstCell, startCellMeeples, _startCell);
 
             _startCell.Meeples.AddRange(startCellMeeples);
         }
-
 
         public void PrintPaths()
         {
@@ -51,65 +47,37 @@ namespace EJames.Helpers
             }
         }
 
-
-        private void ProcessCell(Cell rootCell, List<Meeple> meeplesInHand)
+        private void ProcessCell(Cell rootCell, List<Meeple> meeplesInHand, Cell from)
         {
             Log($"ProcessCell: {rootCell}, {meeplesInHand.Count}");
 
+            //Global condition to stop go deeper
+            // If we are here, path complete
             if (meeplesInHand.Count > 0)
             {
                 Log("Neighbours");
-                List<Cell> neighbours = _gridController.GetNeighbours(rootCell);
+                List<Cell> neighbours = _gridController.GetNeighboursWithout(rootCell, from);
                 foreach (Cell neighbour in neighbours)
                 {
-                    bool isLastMeeple = meeplesInHand.Count == 1;
-                    if (isLastMeeple && !neighbour.HasAnyMeeples(meeplesInHand))
+                    List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ?
+                        rootCell.GetUnionMeeples(meeplesInHand) :
+                        meeplesInHand;
+
+                    Log("unionMeeples");
+                    foreach (Meeple leftMeeple in unionMeeples.ToList())
                     {
-                        break;
-                    }
+                        Log($"Left {leftMeeple.Type.ToString()} on {rootCell}");
+                        PathNode movement = new PathNode(rootCell, leftMeeple);
 
-                    bool alreadyChecked = false;
-                    if (_pathNodesStack.Count == 0)
-                    {
-                        alreadyChecked = neighbour.Equals(_startCell);
-                    }
-                    else
-                    {
-                        for (int i = _pathNodesStack.Count - 1; i >= 0 && i >= _pathNodesStack.Count - 3; i--)
-                        {
-                            PathNode movement = _pathNodesStack[i];
-                            Cell movementCell = movement.Cell;
-                            if (neighbour.Equals(_startCell) ||
-                                (movementCell.X == neighbour.X && movementCell.Y == neighbour.Y))
-                            {
-                                alreadyChecked = true;
-                                break;
-                            }
-                        }
-                    }
+                        _pathNodesStack.Add(movement);
+                        rootCell.Meeples.Add(leftMeeple);
+                        meeplesInHand.Remove(leftMeeple);
 
-                    Log($"{neighbour}, goto? :{!alreadyChecked}");
+                        ProcessCell(neighbour, meeplesInHand, rootCell);
 
-                    if (!alreadyChecked)
-                    {
-                        List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ? rootCell.GetUnionMeeples(meeplesInHand) : meeplesInHand;
-
-                        Log("unionMeeples");
-                        foreach (Meeple leftMeeple in unionMeeples.ToList())
-                        {
-                            Log($"Left {leftMeeple.Type.ToString()} on {rootCell}");
-                            PathNode movement = new PathNode(rootCell, leftMeeple);
-
-                            _pathNodesStack.Add(movement);
-                            rootCell.Meeples.Add(leftMeeple);
-                            meeplesInHand.Remove(leftMeeple);
-
-                            ProcessCell(neighbour, meeplesInHand);
-
-                            meeplesInHand.Add(leftMeeple);
-                            rootCell.Meeples.Remove(leftMeeple);
-                            _pathNodesStack.Remove(movement);
-                        }
+                        meeplesInHand.Add(leftMeeple);
+                        rootCell.Meeples.Remove(leftMeeple);
+                        _pathNodesStack.Remove(movement);
                     }
                 }
             }
@@ -119,12 +87,10 @@ namespace EJames.Helpers
             }
         }
 
-
         private void Log(string log)
         {
             // Debug.Log(log);
         }
-
 
         private void AddMovement()
         {
@@ -142,7 +108,6 @@ namespace EJames.Helpers
                 _possibleMovements.Add(movement);
             }
         }
-
 
         private bool IsExist(Path path, Path other)
         {

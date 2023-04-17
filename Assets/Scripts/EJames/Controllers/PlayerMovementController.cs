@@ -43,7 +43,6 @@ namespace EJames.Controllers
 
         public event Action<Path> MovementFinished;
 
-
         public void Start()
         {
             CalculatePossibleCells();
@@ -51,12 +50,10 @@ namespace EJames.Controllers
             _cellSelectController.Clicked += SelectCell;
         }
 
-
         public void Finish()
         {
             _cellSelectController.Clicked -= SelectCell;
         }
-
 
         public void SelectCell(Cell cell)
         {
@@ -78,7 +75,6 @@ namespace EJames.Controllers
             }
         }
 
-
         public void Movement(Cell cell, Meeple meeple)
         {
             _currentPath.PathNodes.Add(new PathNode(cell, meeple));
@@ -89,11 +85,6 @@ namespace EJames.Controllers
                     PathNode node = m.Path.PathNodes[depth];
                     return !node.Cell.Equals(cell) || !node.MeepleLeft.Equals(meeple);
                 });
-
-            PrintPossibleMovements();
-
-            UpdatePossibleCellsWithDepth(_currentPath.PathNodes.Count);
-            HighlightPossibleCells();
 
             _startCell.RemoveMeeple(meeple);
             cell.AddMeeple(meeple);
@@ -109,13 +100,19 @@ namespace EJames.Controllers
 
                 _possibleMovementController.FindAllPossibleMovements();
                 CalculatePossibleCells();
-                UpdateAndHighlight();
+                HighlightPossibleCells();
+            }
+            else
+            {
+                PrintPossibleMovements();
+
+                UpdatePossibleCellsWithDepth(_currentPath.PathNodes.Count);
+                HighlightPossibleCells();
             }
 
             State state = isMoveDone ? State.StartCell : State.Moving;
             SetState(state);
         }
-
 
         private void UpdateAndHighlight()
         {
@@ -123,9 +120,9 @@ namespace EJames.Controllers
             HighlightPossibleCells();
         }
 
-
         private void CalculatePossibleCells()
         {
+            _nextPossibleCells.Clear();
             List<Cell> allPossibleStartCells = _possibleMovementController.GetAllPossibleStartCells();
             foreach (Cell startCell in allPossibleStartCells)
             {
@@ -143,7 +140,6 @@ namespace EJames.Controllers
             PrintPossibleMovements();
         }
 
-
         private void PrintPossibleMovements()
         {
             foreach (Movement movement in _possibleMovements)
@@ -151,7 +147,6 @@ namespace EJames.Controllers
                 PathPrinter.PrintMovement(movement);
             }
         }
-
 
         private void ProcessStart(Cell cell)
         {
@@ -165,7 +160,6 @@ namespace EJames.Controllers
             SetState(State.Moving);
         }
 
-
         private void UpdatePossibleCells()
         {
             _nextPossibleCells.Clear();
@@ -174,7 +168,6 @@ namespace EJames.Controllers
                 _nextPossibleCells.Add(possibleMovement.FirstCell);
             }
         }
-
 
         private void UpdatePossibleCellsWithDepth(int depth)
         {
@@ -188,7 +181,6 @@ namespace EJames.Controllers
             }
         }
 
-
         private void HighlightPossibleCells()
         {
             _gridPresenter.HighlightOff();
@@ -199,12 +191,10 @@ namespace EJames.Controllers
             }
         }
 
-
         private void SetState(State state)
         {
             _state = state;
         }
-
 
         private void ProcessMoving(Cell cell)
         {
@@ -231,7 +221,9 @@ namespace EJames.Controllers
 
             if (canLeaveMeeplesHere.Count > 0)
             {
-                List<Meeple> unionMeeples = cell.HasAnyMeeples() ? cell.GetUnionMeeples(_playerHandController.Meeples) : _playerHandController.Meeples;
+                List<Meeple> unionMeeples = cell.HasAnyMeeples() ?
+                    cell.GetUnionMeeples(_playerHandController.Meeples) :
+                    _playerHandController.Meeples;
                 if (unionMeeples.Count > 1)
                 {
                     SetState(State.WaitPlayerDecision);
@@ -253,7 +245,6 @@ namespace EJames.Controllers
             }
         }
 
-
         private void OnMeepleChoose(Meeple meeple)
         {
             Movement(_waitingCell, meeple);
@@ -263,7 +254,6 @@ namespace EJames.Controllers
 
             _popupsController.HidePopup<PopupMeepleDecision>();
         }
-
 
         private enum State
         {
