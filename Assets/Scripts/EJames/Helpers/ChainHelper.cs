@@ -2,10 +2,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using EJames.Controllers;
 using EJames.Models;
-using UnityEngine;
 
 #endregion
 
@@ -22,6 +20,7 @@ namespace EJames.Helpers
 
         private List<Movement> _possibleMovements = new List<Movement>();
 
+
         public ChainHelper(GridController gridController, Cell startCell, Cell firstCell)
         {
             _gridController = gridController;
@@ -29,7 +28,9 @@ namespace EJames.Helpers
             _firstCell = firstCell;
         }
 
+
         public List<Movement> PossibleMovements => _possibleMovements;
+
 
         public void CalculateMovements()
         {
@@ -41,26 +42,15 @@ namespace EJames.Helpers
             _startCell.Meeples.AddRange(startCellMeeples);
         }
 
+
         public void PrintPaths()
         {
             foreach (Movement movement in _possibleMovements)
             {
-                PrintPath(movement.Path);
+                PathPrinter.PrintMovement(movement);
             }
         }
 
-        private void PrintPath(Path path)
-        {
-            StringBuilder pathString = new StringBuilder();
-            pathString.Append($"{_startCell}");
-
-            foreach (PathNode movement in path.PathNodes)
-            {
-                pathString.Append($" -> {movement.Cell} ({movement.MeepleLeft.Type.ToString()})");
-            }
-
-            Debug.Log($"Path: {pathString}");
-        }
 
         private void ProcessCell(Cell rootCell, List<Meeple> meeplesInHand)
         {
@@ -102,9 +92,7 @@ namespace EJames.Helpers
 
                     if (!alreadyChecked)
                     {
-                        List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ?
-                            rootCell.GetUnionMeeples(meeplesInHand) :
-                            meeplesInHand;
+                        List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ? rootCell.GetUnionMeeples(meeplesInHand) : meeplesInHand;
 
                         Log("unionMeeples");
                         foreach (Meeple leftMeeple in unionMeeples.ToList())
@@ -131,10 +119,12 @@ namespace EJames.Helpers
             }
         }
 
+
         private void Log(string log)
         {
             // Debug.Log(log);
         }
+
 
         private void AddMovement()
         {
@@ -152,6 +142,7 @@ namespace EJames.Helpers
                 _possibleMovements.Add(movement);
             }
         }
+
 
         private bool IsExist(Path path, Path other)
         {

@@ -22,6 +22,7 @@ namespace EJames.Controllers
 
         public List<Movement> PossibleMovements => _possibleMovements;
 
+
         public List<Movement> GetPossibleMovementsByStartCell(Cell startCell)
         {
             List<Movement> movements = new List<Movement>();
@@ -37,6 +38,7 @@ namespace EJames.Controllers
             return movements;
         }
 
+
         public List<Cell> GetAllPossibleStartCells()
         {
             List<Cell> startCells = new List<Cell>();
@@ -47,6 +49,7 @@ namespace EJames.Controllers
 
             return startCells;
         }
+
 
         public void FindAllPossibleMovements()
         {
@@ -70,6 +73,7 @@ namespace EJames.Controllers
 
             LastOperationTime = DateTime.Now - startTime;
         }
+
 
         void IInitable.Init()
         {
