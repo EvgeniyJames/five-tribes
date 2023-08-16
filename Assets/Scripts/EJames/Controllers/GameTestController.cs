@@ -49,9 +49,8 @@ namespace EJames.Controllers
             {
                 Debug.Log($"{_possibleMovementController.PossibleMovements.Count} possible moves");
 
-                Movement possibleMovement = _possibleMovementController.PossibleMovements[0];
-
-                // _gridPresenter.GetCellView(possibleMovement.StartCell).ColorHighlighter.Highlight(Color.magenta);
+                int movementIndex = Random.Range(0, _possibleMovementController.PossibleMovements.Count);
+                Movement possibleMovement = _possibleMovementController.PossibleMovements[movementIndex];
 
                 Debug.Log($"possibleMovement.StartCell: {possibleMovement.StartCell}");
 

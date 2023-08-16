@@ -51,13 +51,10 @@ namespace EJames.Helpers
         {
             bool lastMeeple = meeplesInHand.Count == 1;
 
-            Log($"ProcessCell: {rootCell}, {meeplesInHand.Count}");
-
             //Global condition to stop go deeper
             // If we are here, path complete
             if (meeplesInHand.Count > 0)
             {
-                Log("Neighbours");
                 List<Cell> neighbours = _gridController.GetNeighboursWithout(rootCell, from);
                 foreach (Cell neighbour in neighbours)
                 {
@@ -71,10 +68,8 @@ namespace EJames.Helpers
                         unionMeeples = meeplesInHand;
                     }
 
-                    Log("unionMeeples");
                     foreach (Meeple leftMeeple in unionMeeples.ToList())
                     {
-                        Log($"Left {leftMeeple.Type.ToString()} on {rootCell}");
                         PathNode movement = new PathNode(rootCell, leftMeeple);
 
                         _pathNodesStack.Add(movement);
@@ -95,11 +90,6 @@ namespace EJames.Helpers
             }
         }
 
-        private void Log(string log)
-        {
-            // Debug.Log(log);
-        }
-
         private void AddMovement()
         {
             Movement movement = new Movement(_startCell, _firstCell);
@@ -110,9 +100,6 @@ namespace EJames.Helpers
 
             if (_possibleMovements.TrueForAll(m => !IsExist(m.Path, movement.Path)))
             {
-                // Log("ADDED");
-                //PrintPath(newPath);
-
                 _possibleMovements.Add(movement);
             }
         }

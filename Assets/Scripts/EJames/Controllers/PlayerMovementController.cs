@@ -93,15 +93,21 @@ namespace EJames.Controllers
 
                 _possibleMovementController.FindAllPossibleMovements();
                 CalculatePossibleCells();
-                //HighlightPossibleCells();
+                HighlightPossibleCells();
             }
             else
             {
-                //PrintPossibleMovements();
+                PrintPossibleMovements();
 
                 UpdatePossibleCellsWithDepth(_currentPath.PathNodes.Count);
-                //HighlightPossibleCells();
+                HighlightPossibleCells();
+
+                if (_nextPossibleCells.Count == 0)
+                {
+                    Debug.Log($"_nextPossibleCells.Count == 0, crap ._.");
+                }
             }
+
 
             State state = isMoveDone ? State.StartCell : State.Moving;
             SetState(state);
@@ -109,8 +115,6 @@ namespace EJames.Controllers
 
         public void CalculatePossibleCells()
         {
-            Debug.Log("CalculatePossibleCells");
-
             _nextPossibleCells.Clear();
             List<Cell> allPossibleStartCells = _possibleMovementController.GetAllPossibleStartCells();
             foreach (Cell startCell in allPossibleStartCells)
@@ -125,14 +129,12 @@ namespace EJames.Controllers
                     _possibleMovementController.GetPossibleMovementsByStartCell(possibleCell);
                 _possibleMovements.AddRange(possibleMovementsByStartCell);
             }
-
-            //PrintPossibleMovements();
         }
 
         private void UpdateAndHighlight()
         {
             UpdatePossibleCells();
-            //HighlightPossibleCells();
+            HighlightPossibleCells();
         }
 
         private void PrintPossibleMovements()
@@ -149,7 +151,7 @@ namespace EJames.Controllers
             _startCell = cell;
 
             _possibleMovements = _possibleMovements.FindAll(m => m.StartCell.Equals(cell));
-            PrintPossibleMovements();
+            //PrintPossibleMovements();
             UpdateAndHighlight();
 
             SetState(State.Moving);
@@ -169,6 +171,7 @@ namespace EJames.Controllers
             _nextPossibleCells.Clear();
             foreach (Movement possibleMovement in _possibleMovements)
             {
+                Debug.Log($"UpdatePossibleCellsWithDepth: {possibleMovement.Path.PathNodes.Count}, {depth}");
                 if (possibleMovement.Path.PathNodes.Count > depth)
                 {
                     _nextPossibleCells.Add(possibleMovement.Path.PathNodes[depth].Cell);
@@ -216,9 +219,12 @@ namespace EJames.Controllers
 
             if (canLeaveMeeplesHere.Count > 0)
             {
-                List<Meeple> unionMeeples = cell.HasAnyMeeples() ?
-                    cell.GetUnionMeeples(_playerHandController.Meeples) :
-                    _playerHandController.Meeples;
+                List<Meeple> unionMeeples = new List<Meeple>();
+                if (cell.HasAnyMeeples())
+                {
+                    unionMeeples = cell.GetUnionMeeples(canLeaveMeeplesHere);
+                }
+
                 if (unionMeeples.Count > 1)
                 {
                     SetState(State.WaitPlayerDecision);
