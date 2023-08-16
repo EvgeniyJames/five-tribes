@@ -78,13 +78,7 @@ namespace EJames.Controllers
         public void Movement(Cell cell, Meeple meeple)
         {
             _currentPath.PathNodes.Add(new PathNode(cell, meeple));
-            _possibleMovements.RemoveAll(
-                m =>
-                {
-                    int depth = _currentPath.PathNodes.Count - 1;
-                    PathNode node = m.Path.PathNodes[depth];
-                    return !node.Cell.Equals(cell) || !node.MeepleLeft.Equals(meeple);
-                });
+            _possibleMovements.RemoveAll(m => !m.Path.EqualsDeep(_currentPath));
 
             _startCell.RemoveMeeple(meeple);
             cell.AddMeeple(meeple);
@@ -172,9 +166,9 @@ namespace EJames.Controllers
         private void UpdatePossibleCellsWithDepth(int depth)
         {
             _nextPossibleCells.Clear();
-            if (depth < 3)
+            foreach (Movement possibleMovement in _possibleMovements)
             {
-                foreach (Movement possibleMovement in _possibleMovements)
+                if (possibleMovement.Path.PathNodes.Count > depth)
                 {
                     _nextPossibleCells.Add(possibleMovement.Path.PathNodes[depth].Cell);
                 }
