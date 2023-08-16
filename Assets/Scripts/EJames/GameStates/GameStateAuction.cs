@@ -34,21 +34,21 @@ namespace EJames.GameStates
         {
             _playerAuctionPresenter.gameObject.SetActive(true);
 
-            // _gameTestController.StartGame();
+            _gameTestController.StartGame();
 
-            _playersAuctionController.PlayerSeat += OnPlayerSeat;
-            _playerSequenceController.PlayersEnded += OnPlayersSequenceEnd;
-
-            List<Player> players = new List<Player>();
-            foreach (OrderSlot slot in _playerOrderController.OrderSlots)
-            {
-                if (slot.Player != null)
-                {
-                    players.Add(slot.Player);
-                }
-            }
-
-            _playerSequenceController.Start(players);
+            // _playersAuctionController.PlayerSeat += OnPlayerSeat;
+            // _playerSequenceController.PlayersEnded += OnPlayersSequenceEnd;
+            //
+            // List<Player> players = new List<Player>();
+            // foreach (OrderSlot slot in _playerOrderController.OrderSlots)
+            // {
+            //     if (slot.Player != null)
+            //     {
+            //         players.Add(slot.Player);
+            //     }
+            // }
+            //
+            // _playerSequenceController.Start(players);
         }
 
         void IGameState.OnExit()

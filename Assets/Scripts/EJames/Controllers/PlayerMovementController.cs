@@ -46,7 +46,6 @@ namespace EJames.Controllers
         public void Start()
         {
             CalculatePossibleCells();
-
             _cellSelectController.Clicked += SelectCell;
         }
 
@@ -94,28 +93,24 @@ namespace EJames.Controllers
 
                 _possibleMovementController.FindAllPossibleMovements();
                 CalculatePossibleCells();
-                HighlightPossibleCells();
+                //HighlightPossibleCells();
             }
             else
             {
-                PrintPossibleMovements();
+                //PrintPossibleMovements();
 
                 UpdatePossibleCellsWithDepth(_currentPath.PathNodes.Count);
-                HighlightPossibleCells();
+                //HighlightPossibleCells();
             }
 
             State state = isMoveDone ? State.StartCell : State.Moving;
             SetState(state);
         }
 
-        private void UpdateAndHighlight()
+        public void CalculatePossibleCells()
         {
-            UpdatePossibleCells();
-            HighlightPossibleCells();
-        }
+            Debug.Log("CalculatePossibleCells");
 
-        private void CalculatePossibleCells()
-        {
             _nextPossibleCells.Clear();
             List<Cell> allPossibleStartCells = _possibleMovementController.GetAllPossibleStartCells();
             foreach (Cell startCell in allPossibleStartCells)
@@ -131,7 +126,13 @@ namespace EJames.Controllers
                 _possibleMovements.AddRange(possibleMovementsByStartCell);
             }
 
-            PrintPossibleMovements();
+            //PrintPossibleMovements();
+        }
+
+        private void UpdateAndHighlight()
+        {
+            UpdatePossibleCells();
+            //HighlightPossibleCells();
         }
 
         private void PrintPossibleMovements()

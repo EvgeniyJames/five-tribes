@@ -52,11 +52,11 @@ namespace EJames.GameStates
 
             _playerMovementController.Start();
 
-            List<Cell> startCells = _possibleMovementController.GetAllPossibleStartCells();
-            foreach (Cell startCell in startCells)
-            {
-                _gridPresenter.GetCellView(startCell).ColorHighlighter.Highlight(Color.magenta);
-            }
+            // List<Cell> startCells = _possibleMovementController.GetAllPossibleStartCells();
+            // foreach (Cell startCell in startCells)
+            // {
+            //     _gridPresenter.GetCellView(startCell).ColorHighlighter.Highlight(Color.magenta);
+            // }
         }
 
         void IGameState.OnExit()

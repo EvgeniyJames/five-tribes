@@ -49,6 +49,8 @@ namespace EJames.Helpers
 
         private void ProcessCell(Cell rootCell, List<Meeple> meeplesInHand, Cell from)
         {
+            bool lastMeeple = meeplesInHand.Count == 1;
+
             Log($"ProcessCell: {rootCell}, {meeplesInHand.Count}");
 
             //Global condition to stop go deeper
@@ -59,9 +61,15 @@ namespace EJames.Helpers
                 List<Cell> neighbours = _gridController.GetNeighboursWithout(rootCell, from);
                 foreach (Cell neighbour in neighbours)
                 {
-                    List<Meeple> unionMeeples = rootCell.HasAnyMeeples() ?
-                        rootCell.GetUnionMeeples(meeplesInHand) :
-                        meeplesInHand;
+                    List<Meeple> unionMeeples = new List<Meeple>();
+                    if (rootCell.HasAnyMeeples())
+                    {
+                        unionMeeples = rootCell.GetUnionMeeples(meeplesInHand);
+                    }
+                    else if (!lastMeeple)
+                    {
+                        unionMeeples = meeplesInHand;
+                    }
 
                     Log("unionMeeples");
                     foreach (Meeple leftMeeple in unionMeeples.ToList())

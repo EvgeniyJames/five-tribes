@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EJames.Helpers;
 using EJames.Models;
 using EJames.Presenters;
 using UnityEngine;
@@ -34,6 +35,8 @@ namespace EJames.Controllers
             { Meeple.MeepleType.Viziers, Color.yellow },
         };
 
+        private const int _delay = 300;
+
         public void StartGame()
         {
             DoGame();
@@ -41,15 +44,19 @@ namespace EJames.Controllers
 
         private async void DoGame()
         {
+            _playerMovementController.CalculatePossibleCells();
             while (_possibleMovementController.PossibleMovements.Count > 0)
             {
                 Debug.Log($"{_possibleMovementController.PossibleMovements.Count} possible moves");
 
                 Movement possibleMovement = _possibleMovementController.PossibleMovements[0];
 
-                _gridPresenter.GetCellView(possibleMovement.StartCell).ColorHighlighter.Highlight(Color.magenta);
+                // _gridPresenter.GetCellView(possibleMovement.StartCell).ColorHighlighter.Highlight(Color.magenta);
+
+                Debug.Log($"possibleMovement.StartCell: {possibleMovement.StartCell}");
+
                 _playerMovementController.SelectCell(possibleMovement.StartCell);
-                await Task.Delay(300);
+                await Task.Delay(_delay);
 
                 Path path = possibleMovement.Path;
                 foreach (PathNode pathNode in path.PathNodes)
@@ -57,23 +64,25 @@ namespace EJames.Controllers
                     _gridPresenter.GetCellView(pathNode.Cell)
                         .ColorHighlighter.Highlight(GetMeepleColor(pathNode.MeepleLeft));
 
-                    await Task.Delay(300);
+                    await Task.Delay(_delay);
                 }
 
-                await Task.Delay(300);
+                Debug.Log("I choose...");
+                PathPrinter.PrintMovement(possibleMovement);
+
+                await Task.Delay(_delay);
 
                 foreach (PathNode pathNode in path.PathNodes)
                 {
+                    Debug.Log($"Step to: {pathNode.Cell}, left: {pathNode.MeepleLeft}");
                     _playerMovementController.Movement(pathNode.Cell, pathNode.MeepleLeft);
-                    await Task.Delay(300);
+                    await Task.Delay(_delay);
                 }
 
-                await Task.Delay(300);
+                Debug.Log("Path done");
 
-                foreach (Cell cell in _gridController.Cells)
-                {
-                    _gridPresenter.GetCellView(cell).ColorHighlighter.OffHighlight();
-                }
+                await Task.Delay(_delay);
+                _gridPresenter.HighlightOff();
             }
 
             Debug.Log("_possibleMovementController.PossibleMovements.Count == 0");
