@@ -97,9 +97,7 @@ namespace EJames.Controllers
             }
             else
             {
-                PrintPossibleMovements();
-
-                UpdatePossibleCellsWithDepth(_currentPath.PathNodes.Count);
+                UpdatePossibleCellsWithDepth(_currentPath);
                 HighlightPossibleCells();
 
                 if (_nextPossibleCells.Count == 0)
@@ -166,16 +164,13 @@ namespace EJames.Controllers
             }
         }
 
-        private void UpdatePossibleCellsWithDepth(int depth)
+        private void UpdatePossibleCellsWithDepth(Path path)
         {
+            Debug.Log($"UpdatePossibleCellsWithDepth:: _possibleMovements.Count: {_possibleMovements.Count}");
             _nextPossibleCells.Clear();
             foreach (Movement possibleMovement in _possibleMovements)
             {
-                Debug.Log($"UpdatePossibleCellsWithDepth: {possibleMovement.Path.PathNodes.Count}, {depth}");
-                if (possibleMovement.Path.PathNodes.Count > depth)
-                {
-                    _nextPossibleCells.Add(possibleMovement.Path.PathNodes[depth].Cell);
-                }
+                _nextPossibleCells.Add(possibleMovement.Path.PathNodes[path.PathNodes.Count].Cell);
             }
         }
 

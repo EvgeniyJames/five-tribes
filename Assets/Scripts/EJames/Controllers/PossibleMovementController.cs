@@ -71,6 +71,14 @@ namespace EJames.Controllers
                 }
             }
 
+            foreach (Movement movement in _possibleMovements)
+            {
+                if (!movement.StartCell.IsNeighbour(movement.Path.PathNodes[0].Cell))
+                {
+                    int a = 0;
+                }
+            }
+
             LastOperationTime = DateTime.Now - startTime;
         }
 

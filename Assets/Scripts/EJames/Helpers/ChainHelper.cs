@@ -16,7 +16,7 @@ namespace EJames.Helpers
         private Cell _firstCell;
 
         private List<FieldMovement> _fieldMovements = new List<FieldMovement>();
-        private List<PathNode> _pathNodesStack = new List<PathNode>();
+        private Stack<PathNode> _pathNodesStack = new Stack<PathNode>();
 
         private List<Movement> _possibleMovements = new List<Movement>();
 
@@ -49,39 +49,37 @@ namespace EJames.Helpers
 
         private void ProcessCell(Cell rootCell, List<Meeple> meeplesInHand, Cell from)
         {
-            bool lastMeeple = meeplesInHand.Count == 1;
-
             //Global condition to stop go deeper
             // If we are here, path complete
             if (meeplesInHand.Count > 0)
             {
-                List<Cell> neighbours = _gridController.GetNeighboursWithout(rootCell, from);
-                foreach (Cell neighbour in neighbours)
+                bool lastMeeple = meeplesInHand.Count == 1;
+                List<Meeple> unionMeeples = new List<Meeple>();
+                if (rootCell.HasAnyMeeples())
                 {
-                    List<Meeple> unionMeeples = new List<Meeple>();
-                    if (rootCell.HasAnyMeeples())
-                    {
-                        unionMeeples = rootCell.GetUnionMeeples(meeplesInHand);
-                    }
-                    else if (!lastMeeple)
-                    {
-                        unionMeeples = meeplesInHand;
-                    }
+                    unionMeeples = rootCell.GetUnionMeeples(meeplesInHand);
+                }
+                else if (!lastMeeple)
+                {
+                    unionMeeples = meeplesInHand;
+                }
 
-                    foreach (Meeple leftMeeple in unionMeeples.ToList())
+                foreach (Meeple leftMeeple in unionMeeples.ToList())
+                {
+                    PathNode movement = new PathNode(rootCell, leftMeeple);
+                    _pathNodesStack.Push(movement);
+                    rootCell.Meeples.Add(leftMeeple);
+                    meeplesInHand.Remove(leftMeeple);
+
+                    List<Cell> neighbours = _gridController.GetNeighboursWithout(rootCell, from);
+                    foreach (Cell neighbour in neighbours)
                     {
-                        PathNode movement = new PathNode(rootCell, leftMeeple);
-
-                        _pathNodesStack.Add(movement);
-                        rootCell.Meeples.Add(leftMeeple);
-                        meeplesInHand.Remove(leftMeeple);
-
                         ProcessCell(neighbour, meeplesInHand, rootCell);
-
-                        meeplesInHand.Add(leftMeeple);
-                        rootCell.Meeples.Remove(leftMeeple);
-                        _pathNodesStack.Remove(movement);
                     }
+
+                    meeplesInHand.Add(leftMeeple);
+                    rootCell.Meeples.Remove(leftMeeple);
+                    _pathNodesStack.Pop();
                 }
             }
             else
@@ -96,6 +94,18 @@ namespace EJames.Helpers
             foreach (PathNode node in _pathNodesStack)
             {
                 movement.Path.PathNodes.Add(node);
+            }
+
+            for (int i = 0; i < movement.Path.PathNodes.Count - 1; i++)
+            {
+                PathNode node = movement.Path.PathNodes[i];
+                PathNode nextNode = movement.Path.PathNodes[i + 1];
+
+                if (!node.Cell.IsNeighbour(nextNode.Cell))
+                {
+                    int a = 0;
+                }
+
             }
 
             if (_possibleMovements.TrueForAll(m => !IsExist(m.Path, movement.Path)))

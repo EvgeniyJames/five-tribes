@@ -35,16 +35,16 @@ namespace EJames.Models
             return false;
         }
 
-        public bool EqualsDeep(Path objPath)
+        public bool EqualsDeep(Path other)
         {
-            if (PathNodes.Count < objPath.PathNodes.Count)
+            if (PathNodes.Count < other.PathNodes.Count)
             {
                 return false;
             }
 
-            for (int i = 0; i < objPath.PathNodes.Count; i++)
+            for (int i = 0; i < other.PathNodes.Count; i++)
             {
-                PathNode otherPathNode = objPath.PathNodes[i];
+                PathNode otherPathNode = other.PathNodes[i];
                 PathNode pathNode = PathNodes[i];
 
                 if (!pathNode.Equals(otherPathNode))

@@ -6,6 +6,7 @@ using EJames.Helpers;
 using EJames.Models;
 using EJames.Presenters;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 #endregion
@@ -35,7 +36,7 @@ namespace EJames.Controllers
             { Meeple.MeepleType.Viziers, Color.yellow },
         };
 
-        private const int _delay = 300;
+        private const int _delay = 1;
 
         public void StartGame()
         {
@@ -51,8 +52,7 @@ namespace EJames.Controllers
 
                 int movementIndex = Random.Range(0, _possibleMovementController.PossibleMovements.Count);
                 Movement possibleMovement = _possibleMovementController.PossibleMovements[movementIndex];
-
-                Debug.Log($"possibleMovement.StartCell: {possibleMovement.StartCell}");
+                //Movement possibleMovement = _possibleMovementController.PossibleMovements[0];
 
                 _playerMovementController.SelectCell(possibleMovement.StartCell);
                 await Task.Delay(_delay);
@@ -66,25 +66,21 @@ namespace EJames.Controllers
                     await Task.Delay(_delay);
                 }
 
-                Debug.Log("I choose...");
-                PathPrinter.PrintMovement(possibleMovement);
-
                 await Task.Delay(_delay);
 
                 foreach (PathNode pathNode in path.PathNodes)
                 {
-                    Debug.Log($"Step to: {pathNode.Cell}, left: {pathNode.MeepleLeft}");
                     _playerMovementController.Movement(pathNode.Cell, pathNode.MeepleLeft);
                     await Task.Delay(_delay);
                 }
-
-                Debug.Log("Path done");
 
                 await Task.Delay(_delay);
                 _gridPresenter.HighlightOff();
             }
 
             Debug.Log("_possibleMovementController.PossibleMovements.Count == 0");
+
+            SceneManager.LoadScene("GameplayOffline");
         }
 
         private Color GetMeepleColor(Meeple meeple)
