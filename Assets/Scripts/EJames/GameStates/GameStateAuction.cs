@@ -30,7 +30,7 @@ namespace EJames.GameStates
         [Inject]
         private PlayerAuctionPresenter _playerAuctionPresenter;
 
-        private const bool _botAllowed = true;
+        private const bool _botAllowed = false;
 
         void IGameState.OnEnter()
         {

@@ -96,17 +96,7 @@ namespace EJames.Helpers
                 movement.Path.PathNodes.Add(node);
             }
 
-            for (int i = 0; i < movement.Path.PathNodes.Count - 1; i++)
-            {
-                PathNode node = movement.Path.PathNodes[i];
-                PathNode nextNode = movement.Path.PathNodes[i + 1];
-
-                if (!node.Cell.IsNeighbour(nextNode.Cell))
-                {
-                    int a = 0;
-                }
-
-            }
+            movement.Path.PathNodes.Reverse();
 
             if (_possibleMovements.TrueForAll(m => !IsExist(m.Path, movement.Path)))
             {

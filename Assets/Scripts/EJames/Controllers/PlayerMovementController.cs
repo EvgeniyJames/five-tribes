@@ -149,9 +149,7 @@ namespace EJames.Controllers
             _startCell = cell;
 
             _possibleMovements = _possibleMovements.FindAll(m => m.StartCell.Equals(cell));
-            //PrintPossibleMovements();
             UpdateAndHighlight();
-
             SetState(State.Moving);
         }
 
@@ -166,7 +164,6 @@ namespace EJames.Controllers
 
         private void UpdatePossibleCellsWithDepth(Path path)
         {
-            Debug.Log($"UpdatePossibleCellsWithDepth:: _possibleMovements.Count: {_possibleMovements.Count}");
             _nextPossibleCells.Clear();
             foreach (Movement possibleMovement in _possibleMovements)
             {
@@ -191,12 +188,6 @@ namespace EJames.Controllers
 
         private void ProcessMoving(Cell cell)
         {
-            if (_currentPath.PathNodes.Count == 0)
-            {
-                _possibleMovements = _possibleMovements.FindAll(m => m.FirstCell.Equals(cell));
-                PrintPossibleMovements();
-            }
-
             List<Meeple> canLeaveMeeplesHere = new List<Meeple>();
             foreach (Movement possibleMovement in _possibleMovements)
             {
@@ -219,6 +210,10 @@ namespace EJames.Controllers
                 {
                     unionMeeples = cell.GetUnionMeeples(canLeaveMeeplesHere);
                 }
+                else
+                {
+                    unionMeeples = canLeaveMeeplesHere;
+                }
 
                 if (unionMeeples.Count > 1)
                 {
@@ -234,9 +229,13 @@ namespace EJames.Controllers
                     PopupMeepleDecision popupMeepleDecision = _popupsController.GetPopup<PopupMeepleDecision>();
                     popupMeepleDecision.ChooseCallback += OnMeepleChoose;
                 }
-                else
+                else if (unionMeeples.Count > 0)
                 {
                     Movement(cell, unionMeeples[0]);
+                }
+                else
+                {
+                    Debug.LogError("unionMeeples.Count <= 0");
                 }
             }
         }
