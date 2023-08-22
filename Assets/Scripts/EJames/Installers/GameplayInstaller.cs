@@ -25,6 +25,7 @@ namespace EJames.Installers
 
         private List<Type> _initablesTypes = new List<Type>
         {
+            typeof(PlayerCellsController),
             typeof(MeepleBagController),
             typeof(PopupsController),
             typeof(PlayersController),

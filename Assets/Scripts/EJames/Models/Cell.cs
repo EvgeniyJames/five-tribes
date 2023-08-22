@@ -115,7 +115,6 @@ namespace EJames.Models
         public List<Meeple> GetMeeplesOfType(Meeple.MeepleType meepleType)
         {
             List<Meeple> meeples = new List<Meeple>();
-
             foreach (Meeple meeple in Meeples)
             {
                 if (meeple.Type.Equals(meepleType))

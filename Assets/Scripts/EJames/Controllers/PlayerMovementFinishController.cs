@@ -17,19 +17,34 @@ namespace EJames.Controllers
         [Inject]
         private MeepleBagController _meepleBagController;
 
+        [Inject]
+        private PlayerCellsController _playerCellsController;
+
+        [Inject]
+        private PlayerSequenceController _playerSequenceController;
+
+
         void IInitable.Init()
         {
             _playerMovementController.MovementFinished += OnMovementFinished;
         }
 
+
         private void OnMovementFinished(Path path)
         {
             PathNode lastNode = path.PathNodes[path.PathNodes.Count - 1];
-            List<Meeple> sameMeeplesOnCell = lastNode.Cell.GetMeeplesOfType(lastNode.MeepleLeft.Type);
+            Cell lastNodeCell = lastNode.Cell;
+            List<Meeple> sameMeeplesOnCell = lastNodeCell.GetMeeplesOfType(lastNode.MeepleLeft.Type);
+
+            bool isCellClear = lastNodeCell.Meeples.Count == sameMeeplesOnCell.Count;
+            if (isCellClear)
+            {
+                _playerCellsController.SetPlayerCell(_playerSequenceController.CurrentPlayer, lastNodeCell);
+            }
 
             foreach (Meeple meeple in sameMeeplesOnCell)
             {
-                lastNode.Cell.RemoveMeeple(meeple);
+                lastNodeCell.RemoveMeeple(meeple);
                 _meepleBagController.PlaceMeepleInBag(meeple);
             }
         }
