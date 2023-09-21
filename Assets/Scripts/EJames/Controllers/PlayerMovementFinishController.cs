@@ -26,12 +26,10 @@ namespace EJames.Controllers
         [Inject]
         private CastActionController _castActionController;
 
-
         void IInitable.Init()
         {
             _playerMovementController.MovementFinished += OnMovementFinished;
         }
-
 
         private void OnMovementFinished(Path path)
         {
@@ -47,14 +45,16 @@ namespace EJames.Controllers
 
             _castActionController.ProcessCastAction(
                 new CastActionController.Args(
-                    sameMeeplesOnCell,
-                    lastNodeCell,
-                    _playerSequenceController.CurrentPlayer
-                ));
+                        sameMeeplesOnCell,
+                        lastNodeCell,
+                        _playerSequenceController.CurrentPlayer
+                    ));
 
             foreach (Meeple meeple in sameMeeplesOnCell)
             {
                 lastNodeCell.RemoveMeeple(meeple);
+
+                //TODO: rebase to cast actions
                 _meepleBagController.PlaceMeepleInBag(meeple);
             }
         }

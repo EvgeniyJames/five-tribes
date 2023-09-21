@@ -18,30 +18,27 @@ namespace EJames.Controllers
 
         private List<ICastAction> _castActions = new List<ICastAction>();
 
-
         public void ProcessCastAction(Args args)
         {
             if (args.LastMeeples.Count > 0)
             {
                 Meeple lastMeeple = args.LastMeeples[0];
                 Meeple.MeepleType lastMeepleType = lastMeeple.Type;
-                ICastAction castAction = GetCastActionType(lastMeepleType);
+                ICastAction castAction = GetCastAction(lastMeepleType);
                 castAction?.DoAction(args);
             }
         }
-
 
         void IInitable.Init()
         {
             _castActions.Add(_instantiator.Instantiate<VizierCastAction>());
         }
 
-
-        private ICastAction GetCastActionType(Meeple.MeepleType meepleType)
+        private ICastAction GetCastAction(Meeple.MeepleType meepleType)
         {
             ICastAction castAction = null;
             int actionIndex = _castActions.FindIndex(ca => ca.Type.Equals(meepleType));
-            if (actionIndex > 0)
+            if (actionIndex > -1)
             {
                 castAction = _castActions[actionIndex];
             }
@@ -53,7 +50,6 @@ namespace EJames.Controllers
             return castAction;
         }
 
-
         public class Args
         {
             public Args(List<Meeple> lastMeeples, Cell lastCell, Player player)
@@ -62,7 +58,6 @@ namespace EJames.Controllers
                 LastCell = lastCell;
                 Player = player;
             }
-
 
             public List<Meeple> LastMeeples { get; }
 
