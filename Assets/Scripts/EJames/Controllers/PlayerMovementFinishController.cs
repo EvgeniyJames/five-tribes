@@ -23,6 +23,9 @@ namespace EJames.Controllers
         [Inject]
         private PlayerSequenceController _playerSequenceController;
 
+        [Inject]
+        private CastActionController _castActionController;
+
 
         void IInitable.Init()
         {
@@ -41,6 +44,13 @@ namespace EJames.Controllers
             {
                 _playerCellsController.SetPlayerCell(_playerSequenceController.CurrentPlayer, lastNodeCell);
             }
+
+            _castActionController.ProcessCastAction(
+                new CastActionController.Args(
+                    sameMeeplesOnCell,
+                    lastNodeCell,
+                    _playerSequenceController.CurrentPlayer
+                ));
 
             foreach (Meeple meeple in sameMeeplesOnCell)
             {
