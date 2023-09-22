@@ -1,5 +1,9 @@
-﻿using Unity.Netcode;
+﻿#region
+
+using Unity.Netcode;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Utility
 {
@@ -15,6 +19,7 @@ namespace EJames.Utility
                 Debug.LogError("ERROR: Spawning not happening in the server!");
             }
             #endif
+
             // We're first instantiating the new instance in the host client
             GameObject newGameObject = Object.Instantiate(prefab, Vector3.zero, Quaternion.identity);
 
@@ -36,6 +41,7 @@ namespace EJames.Utility
                 Debug.LogError("ERROR: Spawning not happening in the server!");
             }
             #endif
+
             // We're first instantiating the new instance in the host client
             GameObject newGameObject = Object.Instantiate(prefab, position, Quaternion.identity);
 
@@ -58,6 +64,7 @@ namespace EJames.Utility
                 Debug.LogError("ERROR: Spawning not happening in the server!");
             }
             #endif
+
             // We're first instantiating the new instance in the host client
             GameObject newGameObject = Object.Instantiate(prefab, position, rotation);
 
@@ -80,6 +87,7 @@ namespace EJames.Utility
                 Debug.LogError("ERROR: Spawning not happening in the server!");
             }
             #endif
+
             // We're first instantiating the new instance in the host client
             GameObject newGameObject = Object.Instantiate(prefab, position, Quaternion.identity);
 

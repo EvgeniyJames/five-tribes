@@ -15,7 +15,6 @@ namespace EJames.Controllers
 
         public event Action PlayerCellChanged;
 
-
         public void SetPlayerCell(Player player, Cell cell)
         {
             PlayerCellsItem item;
@@ -39,27 +38,22 @@ namespace EJames.Controllers
             }
         }
 
-
         private class PlayerCellsItem
         {
             private Player _player;
             private List<Cell> _cells = new List<Cell>();
-
 
             public PlayerCellsItem(Player player)
             {
                 _player = player;
             }
 
-
             public Player Player => _player;
-
 
             public bool Contains(Cell cell)
             {
                 return _cells.Contains(cell);
             }
-
 
             public void Add(Cell cell)
             {

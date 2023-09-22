@@ -1,5 +1,9 @@
+#region
+
 using EJames.Models;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Presenters
 {
@@ -11,7 +15,6 @@ namespace EJames.Presenters
         private static Vector3 _flipAngles = new Vector3(0, 0, 180);
 
         public Resource Resource { get; set; }
-
 
         public void Flip()
         {

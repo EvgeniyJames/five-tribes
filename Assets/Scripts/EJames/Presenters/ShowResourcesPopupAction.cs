@@ -1,7 +1,11 @@
+#region
+
 using EJames.Controllers;
 using EJames.Popups;
 using UnityEngine;
 using Zenject;
+
+#endregion
 
 namespace EJames.Presenters
 {

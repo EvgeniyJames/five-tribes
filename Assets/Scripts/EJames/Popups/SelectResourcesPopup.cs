@@ -1,7 +1,11 @@
+#region
+
 using EJames.Controllers;
 using EJames.Models;
 using EJames.Presenters;
 using Zenject;
+
+#endregion
 
 namespace EJames.Popups
 {
@@ -20,6 +24,12 @@ namespace EJames.Popups
         {
             _resourceSelectionController.OnDone();
             _popupsController.HidePopup<SelectResourcesPopup>();
+        }
+
+        public void OnSelect(Resource resource)
+        {
+            ResourceCardPresenter presenter = _resourcesDeckPresenter.GetPresenter(resource);
+            presenter.Select();
         }
 
         protected override void ShowInternal()
@@ -45,12 +55,5 @@ namespace EJames.Popups
             ResourceCardPresenter presenter = _resourcesDeckPresenter.GetPresenter(resource);
             presenter.Deselect();
         }
-
-        public void OnSelect(Resource resource)
-        {
-            ResourceCardPresenter presenter = _resourcesDeckPresenter.GetPresenter(resource);
-            presenter.Select();
-        }
     }
-
 }

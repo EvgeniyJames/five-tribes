@@ -15,7 +15,6 @@ namespace EJames.CastActions
 
         Meeple.MeepleType ICastAction.Type => Meeple.MeepleType.Viziers;
 
-
         void ICastAction.DoAction(CastActionController.Args args)
         {
             _playerMeeplesController.SetPlayerMeeples(args.Player, args.LastMeeples);

@@ -1,15 +1,20 @@
-﻿using System;
+﻿#region
+
+using System;
 using EJames.Serializers;
 using EJames.Utility;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
+#endregion
+
 namespace EJames.Managers
 {
     public class ChatManager : SingletonNetwork<ChatManager>
     {
-        [SerializeField] private TMP_Text _text;
+        [SerializeField]
+        private TMP_Text _text;
 
         public void NewMessage()
         {

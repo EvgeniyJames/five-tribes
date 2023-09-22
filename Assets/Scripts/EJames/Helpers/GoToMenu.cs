@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿#region
+
+using System.Collections;
 using EJames.Managers;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Helpers
 {

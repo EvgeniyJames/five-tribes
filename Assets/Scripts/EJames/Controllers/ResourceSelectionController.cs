@@ -1,6 +1,10 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using EJames.Models;
+
+#endregion
 
 namespace EJames.Controllers
 {
@@ -10,12 +14,13 @@ namespace EJames.Controllers
 
         private int _amount;
 
-        public bool IsActive { get; set; }
-
-        public event Action<Resource> Selected;
         public event Action<Resource> Deselected;
 
         public event Action Done;
+
+        public event Action<Resource> Selected;
+
+        public bool IsActive { get; set; }
 
         public void SelectResources(int amount)
         {
@@ -38,6 +43,19 @@ namespace EJames.Controllers
             }
         }
 
+        public void OnDone()
+        {
+            foreach (Resource resource in _selectedResources)
+            {
+                Deselected?.Invoke(resource);
+            }
+
+            _selectedResources.Clear();
+
+            IsActive = false;
+            Done?.Invoke();
+        }
+
         private void OnResourceSelect(Resource resource)
         {
             if (_selectedResources.Count < _amount)
@@ -51,19 +69,6 @@ namespace EJames.Controllers
         {
             _selectedResources.Remove(resource);
             Deselected?.Invoke(resource);
-        }
-
-        public void OnDone()
-        {
-            foreach(Resource resource in _selectedResources)
-            {
-                Deselected?.Invoke(resource);
-            }
-
-            _selectedResources.Clear();
-
-            IsActive = false;
-            Done?.Invoke();
         }
     }
 }

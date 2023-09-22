@@ -1,23 +1,27 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using EJames.Models;
 using EJames.Utility;
 
+#endregion
+
 namespace EJames.Controllers
 {
     public class ResourcesManager : IInitable
     {
-        private const int _deckSize = 9;
-
         private int _deckOffset;
 
         private List<Resource> _resources = new List<Resource>();
         private List<Resource> _currentDeck = new List<Resource>();
-
-        public List<Resource> Resources => _resources;
-        public List<Resource> CurrentDeck => _currentDeck;
+        private const int _deckSize = 9;
 
         public event Action DeckUpdated;
+
+        public List<Resource> Resources => _resources;
+
+        public List<Resource> CurrentDeck => _currentDeck;
 
         void IInitable.Init()
         {

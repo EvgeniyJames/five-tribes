@@ -106,7 +106,6 @@ namespace EJames.Controllers
                 }
             }
 
-
             State state = isMoveDone ? State.StartCell : State.Moving;
             SetState(state);
         }

@@ -15,7 +15,6 @@ namespace EJames.CastActions
 
         Meeple.MeepleType ICastAction.Type => Meeple.MeepleType.Merchants;
 
-
         void ICastAction.DoAction(CastActionController.Args args)
         {
             foreach (Meeple meeple in args.LastMeeples)

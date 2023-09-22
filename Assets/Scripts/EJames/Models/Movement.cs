@@ -1,9 +1,8 @@
 ﻿#region
 
-#endregion
-
 using System;
-using UnityEngine;
+
+#endregion
 
 namespace EJames.Models
 {
@@ -26,6 +25,11 @@ namespace EJames.Models
             return Equals(other as Movement);
         }
 
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(StartCell, FirstCell, Path);
+        }
+
         protected bool Equals(Movement other)
         {
             if (other == null)
@@ -34,11 +38,6 @@ namespace EJames.Models
             }
 
             return Equals(StartCell, other.StartCell) && Equals(FirstCell, other.FirstCell) && Equals(Path, other.Path);
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(StartCell, FirstCell, Path);
         }
     }
 }

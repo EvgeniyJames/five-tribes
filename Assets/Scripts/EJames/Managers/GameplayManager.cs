@@ -1,5 +1,9 @@
-﻿using EJames.Utility;
+﻿#region
+
+using EJames.Utility;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Managers
 {

@@ -1,7 +1,11 @@
+#region
+
 using System.Collections.Generic;
 using EJames.Controllers;
 using UnityEngine;
 using Zenject;
+
+#endregion
 
 namespace EJames.Presenters
 {
@@ -28,4 +32,3 @@ namespace EJames.Presenters
         }
     }
 }
-

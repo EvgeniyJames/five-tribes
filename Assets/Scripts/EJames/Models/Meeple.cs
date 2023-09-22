@@ -9,6 +9,11 @@
 
         public MeepleType Type { get; }
 
+        public override string ToString()
+        {
+            return nameof(Type);
+        }
+
         public enum MeepleType
         {
             Viziers,
@@ -16,11 +21,6 @@
             Merchants,
             Builders,
             Assassins,
-        }
-
-        public override string ToString()
-        {
-            return nameof(Type);
         }
     }
 }

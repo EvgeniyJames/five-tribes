@@ -32,7 +32,6 @@ namespace EJames.Presenters
         private List<CellView> _cellViews = new List<CellView>();
         private List<MeepleView> _meepleViews = new List<MeepleView>();
 
-
         public MeepleView GetMeepleView(Meeple meeple)
         {
             MeepleView meepleView = null;
@@ -44,7 +43,6 @@ namespace EJames.Presenters
 
             return meepleView;
         }
-
 
         public CellView GetCellView(Cell cell)
         {
@@ -58,7 +56,6 @@ namespace EJames.Presenters
             return cellView;
         }
 
-
         public void HighlightOff()
         {
             foreach (CellView cellView in _cellViews)
@@ -66,7 +63,6 @@ namespace EJames.Presenters
                 cellView.ColorHighlighter.OffHighlight();
             }
         }
-
 
         protected void Awake()
         {
@@ -89,7 +85,6 @@ namespace EJames.Presenters
                 }
             }
         }
-
 
         protected void OnDestroy()
         {

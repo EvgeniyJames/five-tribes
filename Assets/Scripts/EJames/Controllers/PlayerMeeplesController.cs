@@ -14,7 +14,6 @@ namespace EJames.Controllers
 
         public event Action<List<Meeple>> PlayerMeeplesChanged;
 
-
         public void SetPlayerMeeples(Player player, List<Meeple> meeples)
         {
             PlayerMeepleItem item;
@@ -37,21 +36,17 @@ namespace EJames.Controllers
             PlayerMeeplesChanged?.Invoke(meeples);
         }
 
-
         private class PlayerMeepleItem
         {
             private Player _player;
             private List<Meeple> _meeples = new List<Meeple>();
-
 
             public PlayerMeepleItem(Player player)
             {
                 _player = player;
             }
 
-
             public Player Player => _player;
-
 
             public void Add(Meeple meeple)
             {

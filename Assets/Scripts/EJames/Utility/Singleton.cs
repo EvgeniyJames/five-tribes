@@ -1,5 +1,9 @@
-﻿using Unity.Netcode;
+﻿#region
+
+using Unity.Netcode;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Utility
 {

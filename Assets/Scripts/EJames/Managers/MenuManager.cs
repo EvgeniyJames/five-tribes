@@ -1,6 +1,10 @@
-﻿using System.Collections;
+﻿#region
+
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Managers
 {

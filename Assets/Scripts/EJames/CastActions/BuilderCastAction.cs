@@ -22,7 +22,6 @@ namespace EJames.CastActions
 
         Meeple.MeepleType ICastAction.Type => Meeple.MeepleType.Builders;
 
-
         void ICastAction.DoAction(CastActionController.Args args)
         {
             foreach (Meeple meeple in args.LastMeeples)
@@ -34,17 +33,17 @@ namespace EJames.CastActions
 
             int colorIndex = _colorsController.GetColorIndex(Color.Blue);
 
-            int _blueNeighbours = 0;
+            int blueNeighbours = 0;
             foreach (Cell neighbour in allNeighbours)
             {
                 if (neighbour.Tile.Color.Equals(colorIndex))
                 {
-                    _blueNeighbours++;
+                    blueNeighbours++;
                 }
             }
 
             //TODO: Add coins to player
-            int coinsCount = _blueNeighbours * args.LastMeeples.Count;
+            int coinsCount = blueNeighbours * args.LastMeeples.Count;
         }
     }
 }

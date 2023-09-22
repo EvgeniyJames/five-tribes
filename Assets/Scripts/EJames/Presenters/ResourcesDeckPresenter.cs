@@ -1,3 +1,5 @@
+#region
+
 using System;
 using System.Collections.Generic;
 using EJames.Controllers;
@@ -5,6 +7,8 @@ using EJames.Models;
 using EJames.Utility;
 using UnityEngine;
 using Zenject;
+
+#endregion
 
 namespace EJames.Presenters
 {
@@ -78,7 +82,8 @@ namespace EJames.Presenters
                 Resource resource = resources[i];
                 ResourceCardItem item = GetResourceCardItem(resource);
 
-                ResourceCardPresenter presenter = _instantiator.InstantiatePrefab<ResourceCardPresenter>(item.Presenter, _flippedDeckParent);
+                ResourceCardPresenter presenter =
+                    _instantiator.InstantiatePrefab<ResourceCardPresenter>(item.Presenter, _flippedDeckParent);
                 _resourceCardPresenters.Add(presenter);
 
                 presenter.Resource = resource;
@@ -102,7 +107,6 @@ namespace EJames.Presenters
 
             return resourceCardItem;
         }
-
 
         [Serializable]
         private class ResourceCardItem

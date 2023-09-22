@@ -14,7 +14,6 @@ namespace EJames.Controllers
 
         public event Action<Player> PlayerResourceChanged;
 
-
         public void SetPlayerResources(Player player, List<Resource> resources)
         {
             PlayerResourcesItem item;
@@ -37,21 +36,17 @@ namespace EJames.Controllers
             PlayerResourceChanged?.Invoke(player);
         }
 
-
         private class PlayerResourcesItem
         {
             private Player _player;
             private List<Resource> _resources = new List<Resource>();
-
 
             public PlayerResourcesItem(Player player)
             {
                 _player = player;
             }
 
-
             public Player Player => _player;
-
 
             public void Add(Resource resource)
             {

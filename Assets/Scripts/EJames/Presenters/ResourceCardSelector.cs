@@ -1,6 +1,10 @@
+#region
+
 using EJames.Controllers;
 using UnityEngine;
 using Zenject;
+
+#endregion
 
 namespace EJames.Presenters
 {
@@ -11,7 +15,6 @@ namespace EJames.Presenters
 
         [Inject]
         private ResourceSelectionController _resourceSelectionController;
-
 
         public void OnSelect()
         {

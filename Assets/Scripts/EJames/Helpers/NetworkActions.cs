@@ -1,12 +1,17 @@
-﻿using EJames.Managers;
+﻿#region
+
+using EJames.Managers;
 using Unity.Netcode;
 using UnityEngine;
+
+#endregion
 
 namespace EJames.Helpers
 {
     public class NetworkActions : MonoBehaviour
     {
-        [SerializeField] private SceneName _lobbyScene;
+        [SerializeField]
+        private SceneName _lobbyScene;
 
         public void OnStartHost()
         {

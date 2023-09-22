@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EJames.Helpers;
 using EJames.Models;
 using EJames.Presenters;
 using UnityEngine;
@@ -52,6 +51,7 @@ namespace EJames.Controllers
 
                 int movementIndex = Random.Range(0, _possibleMovementController.PossibleMovements.Count);
                 Movement possibleMovement = _possibleMovementController.PossibleMovements[movementIndex];
+
                 //Movement possibleMovement = _possibleMovementController.PossibleMovements[0];
 
                 _playerMovementController.SelectCell(possibleMovement.StartCell);

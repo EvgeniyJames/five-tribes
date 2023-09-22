@@ -20,6 +20,8 @@ namespace EJames.Controllers
         private List<Cell> _cells = new List<Cell>(_cellsAmount);
         private List<Meeple> _meeples = new List<Meeple>(_meeplesAmount);
 
+        private List<Cell> _tempList = new List<Cell>();
+
         private const int _cellsAmount = _fieldX * _fieldY;
 
         private const int _fieldX = 6;
@@ -30,8 +32,6 @@ namespace EJames.Controllers
 
         private const int _tilesBlueAmount = 12;
         private const int _tilesRedAmount = 18;
-
-        private List<Cell> _tempList = new List<Cell>();
 
         public event Action GridInitialized;
 

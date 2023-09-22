@@ -1,7 +1,11 @@
-﻿using System;
+﻿#region
+
+using System;
 using EJames.Utility;
 using Unity.Netcode;
 using UnityEngine.SceneManagement;
+
+#endregion
 
 namespace EJames.Managers
 {
@@ -15,9 +19,9 @@ namespace EJames.Managers
 
     public class LoadingSceneManager : SingletonPersistent<LoadingSceneManager>
     {
-        public SceneName SceneActive => _sceneActive;
-
         private SceneName _sceneActive;
+
+        public SceneName SceneActive => _sceneActive;
 
         public void Init()
         {

@@ -1,4 +1,8 @@
-﻿using Unity.Netcode;
+﻿#region
+
+using Unity.Netcode;
+
+#endregion
 
 namespace EJames.Serializers
 {

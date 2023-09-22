@@ -16,7 +16,6 @@ namespace EJames.Helpers
 
         private Tweener _tweener;
 
-
         public void Highlight(Color color)
         {
             _spriteRenderer.color = color;
@@ -25,13 +24,11 @@ namespace EJames.Helpers
             _tweener = _spriteRenderer.transform.DOShakeScale(1f, Vector3.one);
         }
 
-
         public void OffHighlight()
         {
             _spriteRenderer.color = _offColor;
             StopTweener();
         }
-
 
         private void StopTweener()
         {
@@ -41,7 +38,6 @@ namespace EJames.Helpers
                 _tweener = null;
             }
         }
-
 
         protected void OnEnable()
         {
