@@ -11,6 +11,9 @@ namespace EJames.Popups
 {
     public class BasePopup : MonoBehaviour, IPopup
     {
+        [SerializeField]
+        private bool _hideOnStart;
+
         [Inject]
         private PopupsController _popupsController;
 
@@ -30,6 +33,10 @@ namespace EJames.Popups
         protected void Awake()
         {
             AwakeInternal();
+            if (_hideOnStart)
+            {
+                HideInternal();
+            }
         }
 
         protected virtual void AwakeInternal()

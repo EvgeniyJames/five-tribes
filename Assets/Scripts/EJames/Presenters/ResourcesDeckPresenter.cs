@@ -30,6 +30,21 @@ namespace EJames.Presenters
         private Instantiator _instantiator;
 
         private List<ResourceCardPresenter> _resourceCardPresenters = new List<ResourceCardPresenter>();
+        private List<ResourceCardPresenter> _currentDeckPresenters = new List<ResourceCardPresenter>();
+
+        public List<ResourceCardPresenter> CurrentDeckPresenters => _currentDeckPresenters;
+
+        public ResourceCardPresenter GetPresenter(Resource resource)
+        {
+            ResourceCardPresenter presenter = null;
+            int index = _resourceCardPresenters.FindIndex(p => p.Resource.Equals(resource));
+            if (index > -1)
+            {
+                presenter = _resourceCardPresenters[index];
+            }
+
+            return presenter;
+        }
 
         protected void OnEnable()
         {
@@ -49,6 +64,8 @@ namespace EJames.Presenters
                     presenter.transform.SetParent(_cardParents[i]);
                     presenter.transform.localPosition = Vector3.zero;
                     presenter.Flip();
+
+                    _currentDeckPresenters.Add(presenter);
                 }
             }
         }
@@ -86,17 +103,6 @@ namespace EJames.Presenters
             return resourceCardItem;
         }
 
-        private ResourceCardPresenter GetPresenter(Resource resource)
-        {
-            ResourceCardPresenter presenter = null;
-            int index = _resourceCardPresenters.FindIndex(p => p.Resource.Equals(resource));
-            if (index > -1)
-            {
-                presenter = _resourceCardPresenters[index];
-            }
-
-            return presenter;
-        }
 
         [Serializable]
         private class ResourceCardItem

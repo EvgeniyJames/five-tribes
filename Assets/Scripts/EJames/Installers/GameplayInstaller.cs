@@ -23,8 +23,12 @@ namespace EJames.Installers
         [SerializeField]
         private PlayerAuctionPresenter _playerAuctionPresenter;
 
+        [SerializeField]
+        private ResourcesDeckPresenter _resourcesDeckPresenter;
+
         private List<Type> _initablesTypes = new List<Type>
         {
+            typeof(ResourceSelectionController),
             typeof(ResourcesManager),
             typeof(PlayerResourcesesController),
             typeof(PlayerMeeplesController),
@@ -59,6 +63,7 @@ namespace EJames.Installers
             Container.Bind<PlayerFieldPresenters>().FromInstance(_playerFieldPresenters).AsSingle();
             Container.Bind<GridPresenter>().FromInstance(_gridPresenter).AsSingle();
             Container.Bind<PlayerAuctionPresenter>().FromInstance(_playerAuctionPresenter).AsSingle();
+            Container.Bind<ResourcesDeckPresenter>().FromInstance(_resourcesDeckPresenter).AsSingle();
 
             foreach (Type type in _initablesTypes)
             {
