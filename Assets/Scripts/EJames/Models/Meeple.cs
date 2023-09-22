@@ -20,7 +20,7 @@
 
         public override string ToString()
         {
-            return $"Meeple: {Type}";
+            return nameof(Type);
         }
     }
 }

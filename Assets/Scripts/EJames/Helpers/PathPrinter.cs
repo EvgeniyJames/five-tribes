@@ -17,7 +17,7 @@ namespace EJames.Helpers
 
             foreach (PathNode pathNode in movement.Path.PathNodes)
             {
-                pathString.Append($" -> {pathNode.Cell} ({pathNode.MeepleLeft.Type.ToString()})");
+                pathString.Append($" -> {pathNode.Cell} ({pathNode.MeepleLeft.Type})");
             }
 
             Debug.Log($"Path: {pathString}");
