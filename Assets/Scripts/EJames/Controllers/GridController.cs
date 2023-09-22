@@ -31,6 +31,8 @@ namespace EJames.Controllers
         private const int _tilesBlueAmount = 12;
         private const int _tilesRedAmount = 18;
 
+        private List<Cell> _tempList = new List<Cell>();
+
         public event Action GridInitialized;
 
         public List<Cell> Cells => _cells;
@@ -71,6 +73,28 @@ namespace EJames.Controllers
             neighbours.RemoveAll(c => c == null);
 
             return neighbours;
+        }
+
+        public List<Cell> Get9Neighbours(Cell cell)
+        {
+            _tempList.Clear();
+
+            _tempList.Add(GetCell(cell.X - 1, cell.Y - 1));
+            _tempList.Add(GetCell(cell.X, cell.Y - 1));
+            _tempList.Add(GetCell(cell.X + 1, cell.Y - 1));
+
+            _tempList.Add(GetCell(cell.X - 1, cell.Y));
+            _tempList.Add(GetCell(cell.X + 1, cell.Y));
+
+            _tempList.Add(GetCell(cell.X - 1, cell.Y + 1));
+            _tempList.Add(GetCell(cell.X, cell.Y + 1));
+            _tempList.Add(GetCell(cell.X + 1, cell.Y + 1));
+
+            _tempList.Add(cell);
+
+            _tempList.RemoveAll(c => c == null);
+
+            return _tempList;
         }
 
         void IInitable.Init()
