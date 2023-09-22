@@ -33,6 +33,8 @@ namespace EJames.Controllers
         {
             _castActions.Add(_instantiator.Instantiate<VizierCastAction>());
             _castActions.Add(_instantiator.Instantiate<ElderCastAction>());
+            _castActions.Add(_instantiator.Instantiate<MerchantCastAction>());
+            _castActions.Add(_instantiator.Instantiate<BuilderCastAction>());
         }
 
         private ICastAction GetCastAction(Meeple.MeepleType meepleType)

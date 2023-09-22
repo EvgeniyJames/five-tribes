@@ -53,9 +53,6 @@ namespace EJames.Controllers
             foreach (Meeple meeple in sameMeeplesOnCell)
             {
                 lastNodeCell.RemoveMeeple(meeple);
-
-                //TODO: rebase to cast actions
-                //_meepleBagController.PlaceMeepleInBag(meeple);
             }
         }
     }
